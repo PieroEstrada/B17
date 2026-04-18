@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 Meses Contigo 💛 | Britney & Piero</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ============================================================
+         AUDIO DE FONDO
+         Coloca tu archivo de música en la carpeta /audio/
+         Cambia "cancion.mp3" por el nombre real de tu archivo
+         Ejemplo: audio/perfect.mp3  |  audio/mi-cancion.mp3
+    ============================================================ -->
+    <audio id="bg-music" loop>
+        <source src="audio/cancion.mp3" type="audio/mpeg">
+        <!-- Si tu archivo es .wav: <source src="audio/cancion.wav" type="audio/wav"> -->
+    </audio>
+
+    <!-- Botón flotante de música -->
+    <button id="music-btn" class="music-btn" title="Activar / Pausar música">🎵</button>
+
+    <!-- Enlace discreto de regreso al menú principal -->
+    <a href="../index.html" style="
+      position:fixed;top:12px;left:14px;z-index:9999;
+      font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;
+      color:rgba(90,60,40,.65);text-decoration:none;
+      background:rgba(255,253,249,.82);
+      backdrop-filter:blur(8px);
+      border:1px solid rgba(196,117,74,.22);
+      border-radius:20px;padding:6px 13px;
+      transition:opacity .2s;
+    " onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">← Menú</a>
+
+    <!-- Partículas de fondo (generadas por JS) -->
+    <div id="particles-container"></div>
+
+
+    <!-- ============================================================
+         SECCIÓN 1 — PANTALLA DE BIENVENIDA
+    ============================================================ -->
+    <section id="welcome-screen" class="screen active">
+
+        <div class="deco-row deco-top">
+            <span class="deco-flower f1">🌻</span>
+            <span class="deco-flower f2">🌸</span>
+            <span class="deco-flower f3">🌷</span>
+            <span class="deco-flower f4">🌻</span>
+            <span class="deco-flower f5">🌹</span>
+            <span class="deco-flower f6">🌷</span>
+        </div>
+
+        <div class="welcome-content">
+            <div class="heart-pulse">💛</div>
+
+            <!-- ============================================================
+                 TEXTO PRINCIPAL — editar aquí si quieres cambiar el título
+            ============================================================ -->
+            <h1 class="welcome-title">3 Meses Contigo</h1>
+
+            <div class="title-flowers">🌻 &nbsp; 🌷 &nbsp; 🌸</div>
+
+            <p class="welcome-sub">Para mi amada</p>
+
+            <!-- Nombre de ella — cambiar si es necesario -->
+            <p class="welcome-name">Britney</p>
+
+            <!-- Tu nombre — cambiar si es necesario -->
+            <p class="welcome-from">Con todo mi amor, <em>Piero</em> 💛</p>
+
+            <p class="welcome-hint">Una pequeña sorpresa preparada con mucho cariño...</p>
+
+            <button id="start-btn" class="btn-primary">
+                Comenzar &nbsp; ✨
+            </button>
+        </div>
+
+        <div class="deco-row deco-bottom">
+            <span class="deco-flower f1">🌷</span>
+            <span class="deco-flower f2">🌻</span>
+            <span class="deco-flower f3">🌸</span>
+            <span class="deco-flower f4">🌷</span>
+            <span class="deco-flower f5">🌻</span>
+            <span class="deco-flower f6">🌸</span>
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         SECCIÓN 2 — QUIZ ROMÁNTICO
+    ============================================================ -->
+    <section id="quiz-section" class="screen">
+        <div class="quiz-wrapper">
+
+            <!-- Encabezado del quiz -->
+            <div class="quiz-header">
+                <p class="quiz-logo">🌻 Quiz de los 3 Meses 🌷</p>
+                <div class="progress-row">
+                    <span id="question-counter" class="q-counter">Pregunta 1 de 25</span>
+                    <div class="progress-track">
+                        <div id="progress-bar" class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta de pregunta -->
+            <div id="question-card" class="question-card">
+
+                <!-- ============================================================
+                     IMÁGENES DEL QUIZ
+                     Carpeta: /upl/
+                     Nombres: f1.jpg, f2.jpg … f25.jpg
+                     Para cambiar la extensión, busca IMAGE_EXT en script.js
+                ============================================================ -->
+                <div class="q-img-wrap">
+                    <img id="question-image" src="" alt="Imagen de la pregunta" class="q-img" />
+                    <div class="q-img-fade"></div>
+                </div>
+
+                <div class="q-body">
+                    <p id="question-text" class="q-text"></p>
+
+                    <div id="options-container" class="options-grid"></div>
+
+                    <div class="q-footer">
+                        <p id="feedback-msg" class="feedback-msg"></p>
+                        <button id="next-btn" class="btn-primary hidden">
+                            Siguiente &nbsp; →
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ============================================================
+         SECCIÓN 3 — QUIZ COMPLETADO (transición)
+    ============================================================ -->
+    <section id="quiz-complete" class="screen">
+        <div class="complete-wrap">
+            <div class="complete-emoji">🎊</div>
+            <h2 class="complete-title">¡Amor, lo lograste!</h2>
+            <p class="complete-sub">Contestaste todas las preguntas del corazón 💛</p>
+            <p id="score-display" class="score-display"></p>
+            <p class="complete-hint">Ahora viene lo más especial de esta sorpresa...</p>
+            <div class="complete-flowers">🌻 &nbsp; 🌷 &nbsp; 🌸</div>
+            <button id="show-testament-btn" class="btn-primary">
+                Ver mi carta &nbsp; 💌
+            </button>
+        </div>
+    </section>
+
+
+    <!-- ============================================================
+         SECCIÓN 4 — TESTAMENTO CON PINGÜINITO
+    ============================================================ -->
+    <section id="testament-section" class="screen">
+        <div class="testament-wrap">
+
+            <h2 class="testament-title">Una carta para ti 💌</h2>
+
+            <!-- Botón para mostrar la carta completa sin esperar el typing -->
+            <button id="skip-typing-btn" class="btn-skip-typing hidden" onclick="skipTyping()">
+                Leer completo ✨
+            </button>
+
+            <!-- Pista del pingüinito — camina de izquierda a derecha -->
+            <div class="penguin-track">
+
+                <!-- ============================================================
+                     PINGÜINITO CSS — no requiere imágenes externas
+                ============================================================ -->
+                <div id="penguin" class="penguin">
+                    <div class="p-body">
+                        <div class="p-belly"></div>
+                        <div class="p-eye p-eye-l"><div class="p-pupil"></div></div>
+                        <div class="p-eye p-eye-r"><div class="p-pupil"></div></div>
+                        <div class="p-beak"></div>
+                        <div class="p-wing p-wing-l"></div>
+                        <div class="p-wing p-wing-r"></div>
+                    </div>
+                    <div class="p-feet">
+                        <div class="p-foot p-foot-l"></div>
+                        <div class="p-foot p-foot-r"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ============================================================
+                 TEXTO DEL TESTAMENTO
+                 El pingüinito "escribe" este texto al caminar.
+                 Para editar el contenido, busca "testamentParagraphs" en script.js
+                 y reemplaza los strings de Lorem Ipsum por tu carta real.
+            ============================================================ -->
+            <div id="testament-text" class="testament-text"></div>
+
+            <!-- Mensaje final especial (aparece al terminar) -->
+            <div id="final-love-msg" class="final-love-msg hidden">
+                <div class="final-heart">💛</div>
+                <p class="final-text">
+                    TE AMO DEMASIADO mi amada Britney,<br>
+                    mi <span class="hl">#17</span> y mi <span class="hl">#ParaSiempre</span> &lt;3
+                </p>
+            </div>
+
+            <!-- Botones finales -->
+            <div id="end-actions" class="end-actions hidden">
+                <button id="restart-btn" class="btn-secondary">🌻 Volver al inicio</button>
+                <button id="replay-btn" class="btn-outline">💌 Releer la carta</button>
+            </div>
+
+        </div>
+    </section>
+
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,2056 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Latidos para Britney 🌸</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & DESIGN TOKENS (aligned with index.html)
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --tf:#5DC4A8; --tf-l:#9DDECA; --tf-d:#3A9A80; --tf-p:#E0F5EF;
+  --wh:#FFFDF9; --cr:#FDF6EE;
+  --tc:#C4754A; --tc-l:#E8A07A; --tc-p:#FAE8DC; --tc-d:#9A4F2A;
+  --gd:#D4AF6A; --gd-l:#EDD89A;
+  --tx:#3A2520; --tx-m:#7A5048; --tx-l:#AA8070;
+  --r:16px;
+  /* Game */
+  --note-sz:54px;
+  --hit-h:88px;
+  --lg:8px;
+}
+
+html,body{
+  height:100%;overflow:hidden;
+  font-family:'Nunito',sans-serif;
+  background:var(--cr);color:var(--tx);
+  touch-action:none;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+#rapp{height:100%;position:relative;overflow:hidden}
+
+.rscreen{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s ease;
+  overflow:hidden;
+}
+.rscreen.ron{opacity:1;pointer-events:all}
+
+/* ============================================================
+   FLOATING PETALS LAYER
+   ============================================================ */
+#rpetals{
+  position:fixed;inset:0;
+  pointer-events:none;z-index:0;overflow:hidden;
+}
+.rpetal{
+  position:absolute;
+  opacity:.3;
+  animation:pfall linear infinite;
+}
+@keyframes pfall{
+  0%  {transform:translateY(-40px) rotate(0deg);opacity:.38}
+  100%{transform:translateY(110vh) rotate(400deg);opacity:0}
+}
+
+/* ============================================================
+   SHARED BUTTONS
+   ============================================================ */
+.btn-prime{
+  background:linear-gradient(135deg,var(--tf) 0%,var(--tf-d) 100%);
+  color:#fff;border:none;border-radius:30px;
+  padding:17px 52px;
+  font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;letter-spacing:.3px;
+  cursor:pointer;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(93,196,168,.4);
+  transition:transform .15s,box-shadow .15s;
+  display:inline-block;text-decoration:none;
+}
+.btn-prime::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.22) 0%,transparent 55%);
+  pointer-events:none;
+}
+.btn-prime:active{transform:scale(.97)}
+
+.btn-sec{
+  background:rgba(255,255,255,.8);
+  color:var(--tx-m);
+  border:1px solid rgba(93,196,168,.3);
+  border-radius:30px;padding:13px 32px;
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;transition:all .15s;
+  display:inline-block;text-decoration:none;margin-top:12px;
+}
+.btn-sec:active{transform:scale(.97);background:var(--tf-p)}
+
+.btn-back{
+  background:rgba(255,255,255,.8);
+  border:1px solid rgba(93,196,168,.25);
+  border-radius:50%;width:40px;height:40px;
+  font-size:18px;cursor:pointer;flex-shrink:0;color:var(--tx-m);
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ============================================================
+   WELCOME SCREEN
+   ============================================================ */
+#rsw{
+  background:linear-gradient(160deg,#D8F5EC 0%,#FDF8F2 48%,#FAE8DC 100%);
+  align-items:center;overflow-y:auto;z-index:1;
+}
+
+.rw-flowers{
+  width:100%;padding:32px 20px 6px;
+  display:flex;justify-content:center;
+  position:relative;z-index:1;
+}
+
+.rw-content{
+  padding:6px 28px 56px;
+  display:flex;flex-direction:column;
+  align-items:center;text-align:center;
+  width:100%;max-width:420px;
+  position:relative;z-index:1;
+}
+
+.rw-badge{
+  font-size:11px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--tc);font-weight:700;margin-bottom:14px;
+}
+
+.rw-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:46px;font-weight:600;line-height:1.0;
+  color:var(--tx);margin-bottom:6px;
+}
+.rw-title em{color:var(--tf-d);font-style:italic}
+
+.rw-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-style:italic;
+  color:var(--tx-m);margin-bottom:22px;
+}
+
+.rw-divider{
+  width:64px;height:1px;margin:0 auto 22px;
+  background:linear-gradient(to right,transparent,var(--tc),transparent);
+}
+
+.rw-dedica{
+  background:rgba(255,255,255,.76);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(93,196,168,.25);
+  border-radius:18px;padding:18px 22px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;font-style:italic;
+  line-height:1.75;color:var(--tx-m);
+  margin-bottom:30px;max-width:320px;
+}
+.rw-dedica strong{color:var(--tc-d);font-style:normal}
+
+/* ============================================================
+   SONG SELECTION
+   ============================================================ */
+#rss{background:var(--cr);z-index:1}
+
+.rss-hdr{
+  background:rgba(253,246,238,.96);
+  backdrop-filter:blur(12px);
+  padding:12px 18px 10px;
+  border-bottom:1px solid rgba(93,196,168,.18);
+  display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+.rss-hdr-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:600;color:var(--tx);flex:1;
+}
+
+.rss-body{
+  flex:1;overflow-y:auto;
+  padding:16px 16px 40px;
+  display:flex;flex-direction:column;gap:14px;
+}
+
+.scard{
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(93,196,168,.2);
+  border-radius:20px;padding:16px 18px;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 3px 14px rgba(60,30,20,.07);
+  transition:transform .15s;
+}
+.scard:active{transform:scale(.985)}
+
+.scard-emoji{
+  font-size:30px;flex-shrink:0;
+  width:54px;height:54px;
+  background:linear-gradient(135deg,var(--tf-p),var(--tc-p));
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.scard-info{flex:1;min-width:0}
+.scard-titulo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:600;color:var(--tx);
+  line-height:1.2;margin-bottom:2px;
+}
+.scard-artista{font-size:12px;color:var(--tx-l);margin-bottom:5px}
+.scard-frase{
+  font-family:'Cormorant Garamond',serif;
+  font-size:13px;font-style:italic;color:var(--tx-m);
+  margin-bottom:8px;line-height:1.4;
+}
+.scard-meta{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.scard-tag{
+  font-size:10px;font-weight:800;letter-spacing:.5px;
+  padding:3px 8px;border-radius:10px;text-transform:uppercase;
+}
+.tag-suave{background:var(--tf-p);color:var(--tf-d)}
+.tag-media{background:var(--tc-p);color:var(--tc-d)}
+.scard-rec{
+  font-size:11px;color:var(--gd);font-weight:700;
+  display:flex;align-items:center;gap:3px;
+}
+
+.scard-btn{
+  background:linear-gradient(135deg,var(--tf),var(--tf-d));
+  color:#fff;border:none;border-radius:50%;
+  width:46px;height:46px;font-size:20px;
+  cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(93,196,168,.4);
+  transition:transform .15s;
+}
+.scard-btn:active{transform:scale(.9)}
+
+/* ============================================================
+   GAME SCREEN
+   ============================================================ */
+#rsg{
+  background:linear-gradient(180deg,#17271f 0%,#1e3028 100%);
+  z-index:1;
+}
+
+/* Header */
+.rg-hdr{
+  background:rgba(12,22,18,.9);
+  backdrop-filter:blur(12px);
+  padding:8px 14px 6px;
+  border-bottom:1px solid rgba(93,196,168,.12);
+  flex-shrink:0;
+}
+.rg-song-nm{
+  font-family:'Cormorant Garamond',serif;
+  font-size:13px;font-style:italic;color:rgba(157,222,202,.75);
+  text-align:center;margin-bottom:5px;
+}
+.rg-stats-row{display:flex;justify-content:space-between;align-items:center}
+.rg-stat{display:flex;flex-direction:column;align-items:center}
+.rg-stat-lbl{
+  font-size:9px;text-transform:uppercase;letter-spacing:1.5px;
+  color:rgba(157,222,202,.45);
+}
+.rg-stat-v{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:500;color:#fff;line-height:1;
+}
+.rg-stat-combo{color:var(--gd-l)}
+.combo-pulse{animation:cpulse .22s ease}
+@keyframes cpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+
+.rg-ctrls{display:flex;gap:7px}
+.rg-cbtn{
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(93,196,168,.18);
+  border-radius:8px;padding:5px 9px;
+  color:rgba(157,222,202,.75);
+  font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;
+  cursor:pointer;white-space:nowrap;
+}
+.rg-cbtn:active{background:rgba(255,255,255,.18)}
+
+/* Progress */
+.rg-prog-rail{height:2px;background:rgba(93,196,168,.1);flex-shrink:0}
+.rg-prog-fill{
+  height:100%;
+  background:linear-gradient(to right,var(--tf),var(--tc-l));
+  transition:width .3s ease;width:0%;
+}
+
+/* Lane area */
+.rg-area{
+  flex:1;display:flex;
+  padding:8px var(--lg) 0;
+  gap:var(--lg);
+  position:relative;
+  min-height:0;
+}
+
+.rg-lane{
+  flex:1;position:relative;
+  display:flex;flex-direction:column;
+  border-radius:14px 14px 0 0;
+  overflow:hidden;
+}
+.rl0{background:linear-gradient(180deg,rgba(93,196,168,.06),rgba(93,196,168,.14))}
+.rl1{background:linear-gradient(180deg,rgba(196,117,74,.06),rgba(196,117,74,.14))}
+.rl2{background:linear-gradient(180deg,rgba(212,175,106,.06),rgba(212,175,106,.14))}
+
+.rg-lane-line{
+  position:absolute;top:0;bottom:0;left:50%;
+  width:1px;transform:translateX(-50%);
+  background:repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,.035) 0,rgba(255,255,255,.035) 5px,
+    transparent 5px,transparent 14px);
+}
+
+/* Notes container sits inside lane, above hit zone */
+.rg-notes-cn{
+  position:absolute;top:0;left:0;right:0;
+  bottom:var(--hit-h);
+  pointer-events:none;
+  /* NO overflow:hidden — notes flow into hit zone */
+}
+
+/* Individual note element */
+.rnote{
+  position:absolute;
+  width:var(--note-sz);height:var(--note-sz);
+  left:50%;transform:translateX(-50%) translateY(-64px);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  pointer-events:none;z-index:5;
+  transition:none;
+}
+.rnote.nl0{
+  background:radial-gradient(circle at 35% 35%,rgba(157,222,202,.92),rgba(58,154,128,.82));
+  box-shadow:0 0 18px rgba(93,196,168,.65),0 2px 8px rgba(0,0,0,.35);
+}
+.rnote.nl1{
+  background:radial-gradient(circle at 35% 35%,rgba(232,160,112,.92),rgba(196,117,74,.82));
+  box-shadow:0 0 18px rgba(196,117,74,.55),0 2px 8px rgba(0,0,0,.35);
+}
+.rnote.nl2{
+  background:radial-gradient(circle at 35% 35%,rgba(237,216,154,.92),rgba(212,175,106,.82));
+  box-shadow:0 0 18px rgba(212,175,106,.55),0 2px 8px rgba(0,0,0,.35);
+}
+
+/* Hit zone (tappable area at bottom of each lane) */
+.rg-hz{
+  height:var(--hit-h);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:10;
+  cursor:pointer;
+}
+.rl0 .rg-hz{background:rgba(93,196,168,.15);border-top:2px solid rgba(93,196,168,.45)}
+.rl1 .rg-hz{background:rgba(196,117,74,.15);border-top:2px solid rgba(196,117,74,.45)}
+.rl2 .rg-hz{background:rgba(212,175,106,.15);border-top:2px solid rgba(212,175,106,.45)}
+.rl0 .rg-hz.hzp{background:rgba(93,196,168,.35)}
+.rl1 .rg-hz.hzp{background:rgba(196,117,74,.3)}
+.rl2 .rg-hz.hzp{background:rgba(212,175,106,.3)}
+
+.hz-icon{
+  width:52px;height:52px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;transition:transform .1s;
+}
+.rl0 .hz-icon{background:rgba(93,196,168,.28);border:2px solid rgba(93,196,168,.55)}
+.rl1 .hz-icon{background:rgba(196,117,74,.22);border:2px solid rgba(196,117,74,.5)}
+.rl2 .hz-icon{background:rgba(212,175,106,.22);border:2px solid rgba(212,175,106,.5)}
+.hzp .hz-icon{transform:scale(.88)}
+
+/* Hit zone pulse ring on tap */
+.rl0 .rg-hz.hzp::after{content:'';position:absolute;width:68px;height:68px;border-radius:50%;border:2px solid rgba(93,196,168,.6);animation:ring-pulse .3s ease forwards}
+.rl1 .rg-hz.hzp::after{content:'';position:absolute;width:68px;height:68px;border-radius:50%;border:2px solid rgba(196,117,74,.55);animation:ring-pulse .3s ease forwards}
+.rl2 .rg-hz.hzp::after{content:'';position:absolute;width:68px;height:68px;border-radius:50%;border:2px solid rgba(212,175,106,.55);animation:ring-pulse .3s ease forwards}
+@keyframes ring-pulse{0%{opacity:.8;transform:scale(.7)}100%{opacity:0;transform:scale(1.6)}}
+
+/* Lane spacer for flex layout */
+.rg-lane-spacer{flex:1}
+
+/* Feedback text above hit zone */
+.rg-fblayer{
+  position:absolute;bottom:calc(var(--hit-h) + 4px);
+  left:0;right:0;z-index:20;
+  display:flex;flex-direction:column;align-items:center;
+  pointer-events:none;
+}
+.rfbw{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:600;color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.5);
+  animation:fbpop .52s ease forwards;
+}
+.rfbw.rfp{color:#9DDECA}
+.rfbw.rfg{color:#EDD89A}
+.rfbw.rfm{color:rgba(255,150,130,.75);font-size:18px}
+@keyframes fbpop{
+  0%{opacity:0;transform:scale(.65) translateY(10px)}
+  28%{opacity:1;transform:scale(1.08) translateY(-4px)}
+  68%{opacity:1;transform:scale(1) translateY(0)}
+  100%{opacity:0;transform:scale(.92) translateY(-14px)}
+}
+
+/* Combo banner */
+.rcbanner{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:25;pointer-events:none;
+  text-align:center;
+  animation:cbbanner 2.4s ease forwards;
+}
+@keyframes cbbanner{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}
+  14%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}
+  72%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-60%) scale(.94)}
+}
+.rcb-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:58px;font-weight:600;color:var(--gd-l);
+  text-shadow:0 0 22px rgba(212,175,106,.65),0 2px 10px rgba(0,0,0,.55);
+}
+.rcb-txt{
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px;font-style:italic;
+  color:rgba(255,255,255,.82);margin-top:-6px;
+}
+
+/* Romantic message popup */
+.rmsg{
+  position:absolute;
+  bottom:calc(var(--hit-h) + 56px);
+  left:50%;transform:translateX(-50%);
+  z-index:30;pointer-events:none;
+  background:rgba(14,32,26,.88);
+  backdrop-filter:blur(14px);
+  border:1px solid rgba(93,196,168,.28);
+  border-radius:20px;padding:11px 18px;
+  text-align:center;
+  max-width:min(270px,84vw);
+  animation:msgfl 3s ease forwards;
+}
+@keyframes msgfl{
+  0%{opacity:0;transform:translateX(-50%) translateY(18px)}
+  10%{opacity:1;transform:translateX(-50%) translateY(0)}
+  78%{opacity:1;transform:translateX(-50%) translateY(-7px)}
+  100%{opacity:0;transform:translateX(-50%) translateY(-16px)}
+}
+.rmsg-tx{
+  font-family:'Cormorant Garamond',serif;
+  font-size:15px;font-style:italic;
+  color:rgba(255,255,255,.9);line-height:1.5;
+}
+
+/* Burst effect */
+.rburst{
+  position:absolute;border-radius:50%;
+  width:80px;height:80px;
+  pointer-events:none;z-index:15;
+  animation:burst .42s ease forwards;
+}
+@keyframes burst{
+  0%{opacity:.85;transform:scale(.25)}
+  100%{opacity:0;transform:scale(2.1)}
+}
+
+/* Paused overlay */
+.rg-paused{
+  position:absolute;inset:0;z-index:50;
+  background:rgba(8,20,15,.87);
+  backdrop-filter:blur(10px);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:14px;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.rg-paused.vis{opacity:1;pointer-events:all}
+.rg-paused-ttl{
+  font-family:'Cormorant Garamond',serif;
+  font-size:38px;font-weight:600;color:#fff;margin-bottom:6px;
+}
+.rg-pbtn{
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(93,196,168,.25);
+  border-radius:20px;padding:12px 30px;
+  color:rgba(157,222,202,.85);
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;width:min(220px,70vw);text-align:center;
+}
+.rg-pbtn:active{background:rgba(255,255,255,.18)}
+.rg-pbtn.big{
+  background:linear-gradient(135deg,var(--tf),var(--tf-d));
+  color:#fff;border:none;
+  box-shadow:0 6px 18px rgba(93,196,168,.4);
+}
+
+/* Loading overlay inside game screen */
+.rg-loading{
+  position:absolute;inset:0;z-index:60;
+  background:rgba(8,20,15,.8);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.rg-loading.vis{opacity:1;pointer-events:all}
+.rg-spin{
+  width:46px;height:46px;border-radius:50%;
+  border:3px solid rgba(93,196,168,.18);
+  border-top-color:var(--tf-l);
+  animation:spin .85s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rg-load-tx{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-style:italic;color:rgba(157,222,202,.8);
+}
+
+/* ============================================================
+   RESULTS SCREEN
+   ============================================================ */
+#rsr{
+  background:linear-gradient(160deg,var(--tf-p) 0%,var(--wh) 40%,var(--tc-p) 100%);
+  align-items:center;overflow-y:auto;z-index:1;
+  padding:36px 24px 56px;text-align:center;
+}
+
+.rr-icon{font-size:64px;margin-bottom:12px;animation:rrb-in .55s cubic-bezier(.34,1.56,.64,1)}
+@keyframes rrb-in{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.rr-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:34px;font-weight:600;color:var(--tx);margin-bottom:4px;
+}
+.rr-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px;font-style:italic;color:var(--tx-m);margin-bottom:10px;
+}
+.rr-rec-badge{
+  background:linear-gradient(135deg,var(--gd),var(--gd-l));
+  color:#fff;padding:5px 16px;border-radius:12px;
+  font-size:12px;font-weight:800;letter-spacing:.4px;
+  display:inline-block;margin-bottom:20px;
+  box-shadow:0 4px 12px rgba(212,175,106,.4);
+}
+.rr-stats{
+  background:rgba(255,255,255,.76);
+  backdrop-filter:blur(10px);
+  border-radius:20px;padding:18px 22px;
+  width:100%;max-width:300px;margin-bottom:18px;
+  border:1px solid rgba(93,196,168,.2);
+}
+.rr-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:9px 0;border-bottom:1px solid rgba(93,196,168,.1);
+}
+.rr-row:last-child{border:none}
+.rr-lbl{font-size:13.5px;color:var(--tx-m)}
+.rr-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:500;color:var(--tx);
+}
+.rr-val.gold{color:var(--gd)}
+
+.rr-love{
+  background:linear-gradient(135deg,#FFF8F0,#FFF0F8);
+  border:1.5px solid rgba(196,117,74,.2);
+  border-radius:18px;padding:18px 22px;
+  max-width:300px;margin-bottom:20px;
+}
+.rr-love-ic{font-size:28px;margin-bottom:8px}
+.rr-love-tx{
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;font-style:italic;
+  color:var(--tx-m);line-height:1.65;
+}
+.rr-acts{display:flex;flex-direction:column;align-items:center;width:100%;max-width:280px}
+
+/* ============================================================
+   TOASTS
+   ============================================================ */
+#rtoast{
+  position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%);
+  z-index:200;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  width:min(300px,90vw);
+}
+.rtoast-item{
+  background:rgba(255,253,249,.97);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(93,196,168,.3);
+  border-radius:24px;padding:10px 20px;text-align:center;
+  box-shadow:0 4px 16px rgba(60,30,20,.12);
+  animation:ti-in .4s cubic-bezier(.34,1.56,.64,1),
+             ti-out .35s ease 2.8s forwards;
+}
+.rtoast-em{font-size:16px;margin-bottom:2px}
+.rtoast-tx{
+  font-family:'Cormorant Garamond',serif;
+  font-size:14px;font-style:italic;color:var(--tx);
+}
+@keyframes ti-in {from{opacity:0;transform:scale(.8) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes ti-out{from{opacity:1}to{opacity:0;transform:scale(.9) translateY(-8px)}}
+
+/* ============================================================
+   CONFETTI/SPARKS
+   ============================================================ */
+#rsparks{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
+.rconfp{
+  position:absolute;border-radius:50%;
+  animation:conffall linear forwards;
+}
+@keyframes conffall{
+  0%{transform:translateY(-20px) rotate(0);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* ============================================================
+   MULTIPLIER badge
+   ============================================================ */
+.rmult{
+  position:absolute;top:8px;right:8px;z-index:22;
+  font-size:11px;font-weight:800;
+  color:var(--gd-l);font-family:'Nunito',sans-serif;
+  letter-spacing:.5px;pointer-events:none;
+  text-shadow:0 1px 6px rgba(0,0,0,.6);
+  opacity:0;transition:opacity .3s;
+}
+.rmult.vis{opacity:1}
+
+/* ============================================================
+   HIT-ZONE FEEDBACK  (is-hit / is-fail)
+   ============================================================ */
+/* Successful tap: gentle glow + soft scale */
+.rl0 .rg-hz.is-hit{
+  background:rgba(93,196,168,.54)!important;
+  box-shadow:0 0 34px rgba(93,196,168,.8),inset 0 0 20px rgba(157,222,202,.55)!important;
+}
+.rl1 .rg-hz.is-hit{
+  background:rgba(196,117,74,.46)!important;
+  box-shadow:0 0 34px rgba(196,117,74,.7),inset 0 0 20px rgba(232,160,112,.45)!important;
+}
+.rl2 .rg-hz.is-hit{
+  background:rgba(212,175,106,.46)!important;
+  box-shadow:0 0 34px rgba(212,175,106,.7),inset 0 0 20px rgba(237,216,154,.45)!important;
+}
+.rg-hz.is-hit{
+  animation:hz-hit-anim .38s ease forwards;
+  border-radius:0;
+}
+@keyframes hz-hit-anim{
+  0%  {transform:scale(1.07)}
+  45% {transform:scale(1.02)}
+  100%{transform:scale(1)}
+}
+
+/* Failed tap / missed note: soft rosy-terracota flush */
+.rg-hz.is-fail{
+  background:rgba(190,65,65,.28)!important;
+  box-shadow:0 0 26px rgba(190,65,65,.45),inset 0 0 18px rgba(220,80,80,.35)!important;
+  animation:hz-fail-anim .46s ease forwards;
+}
+@keyframes hz-fail-anim{
+  0%  {transform:scale(.96)}
+  40% {transform:scale(1.03)}
+  100%{transform:scale(1)}
+}
+
+/* hz-icon scale adjustments when flashing */
+.rg-hz.is-hit  .hz-icon{transform:scale(1.18)!important;transition:transform .15s}
+.rg-hz.is-fail .hz-icon{transform:scale(.82)!important;transition:transform .14s}
+
+/* ============================================================
+   BOMB NOTE  (difícil mode — do NOT tap)
+   Color camouflaged per lane (same family as good notes, slightly
+   darker) — but emoji inside is always 💣.
+   IMPORTANT: keyframes use ONLY opacity — never transform —
+   because the game loop writes transform every rAF frame.
+   Mixing CSS animation on transform with JS transform = lag.
+   ============================================================ */
+.rnote.rbomb{
+  font-size:20px !important;
+  animation:bomb-breathe 1.6s ease-in-out infinite;
+}
+/* Lane 0 bomb — tiffany family, muted */
+.rl0 .rnote.rbomb{
+  background:radial-gradient(circle at 35% 35%,
+    rgba(72,140,120,.92),rgba(28,75,58,.94));
+  box-shadow:0 0 12px rgba(50,115,90,.5),0 2px 6px rgba(0,0,0,.4);
+  border:2px solid rgba(62,130,100,.5);
+}
+/* Lane 1 bomb — terracota family, muted */
+.rl1 .rnote.rbomb{
+  background:radial-gradient(circle at 35% 35%,
+    rgba(160,85,50,.92),rgba(95,40,18,.94));
+  box-shadow:0 0 12px rgba(140,70,38,.5),0 2px 6px rgba(0,0,0,.4);
+  border:2px solid rgba(148,65,32,.5);
+}
+/* Lane 2 bomb — gold family, muted */
+.rl2 .rnote.rbomb{
+  background:radial-gradient(circle at 35% 35%,
+    rgba(158,132,62,.92),rgba(105,84,25,.94));
+  box-shadow:0 0 12px rgba(145,115,48,.5),0 2px 6px rgba(0,0,0,.4);
+  border:2px solid rgba(142,108,38,.5);
+}
+/* Only opacity in keyframes — NEVER transform here */
+@keyframes bomb-breathe{
+  0%,100%{ opacity:.72 }
+  50%    { opacity:.96 }
+}
+
+/* ============================================================
+   NOTE HIT FLASH — scale-up on hit, no filter (perf-safe)
+   ============================================================ */
+.rnote.n-hit-flash{
+  animation:note-hit-flash .22s ease-out forwards !important;
+  pointer-events:none;
+}
+@keyframes note-hit-flash{
+  0%{
+    transform:translateX(-50%) translateY(var(--note-y, 0px)) scale(1);
+    opacity:1;
+  }
+  45%{
+    transform:translateX(-50%) translateY(var(--note-y, 0px)) scale(1.45);
+    opacity:.9;
+  }
+  100%{
+    transform:translateX(-50%) translateY(var(--note-y, 0px)) scale(1.9);
+    opacity:0;
+  }
+}
+
+.rnote.n-bomb-flash{
+  animation:note-bomb-flash .28s ease-out forwards !important;
+  pointer-events:none;
+}
+@keyframes note-bomb-flash{
+  0%{
+    transform:translateX(-50%) translateY(var(--note-y, 0px)) scale(1);
+    opacity:1;
+  }
+  25%{
+    transform:translateX(-46%) translateY(var(--note-y, 0px)) scale(1.15) rotate(-8deg);
+    opacity:.95;
+  }
+  60%{
+    transform:translateX(-54%) translateY(var(--note-y, 0px)) scale(1.35) rotate(5deg);
+    opacity:.55;
+  }
+  100%{
+    transform:translateX(-50%) translateY(var(--note-y, 0px)) scale(1.7);
+    opacity:0;
+  }
+}
+
+/* ============================================================
+   MODE SELECTOR  (song selection screen)
+   ============================================================ */
+.rmode-wrap{
+  display:flex;align-items:center;gap:12px;
+  padding:9px 18px 8px;
+  background:rgba(253,246,238,.95);
+  border-bottom:1px solid rgba(93,196,168,.13);
+  flex-shrink:0;
+}
+.rmode-lbl{
+  font-size:12px;font-weight:700;letter-spacing:.5px;
+  color:var(--tx-m);white-space:nowrap;
+  font-family:'Nunito',sans-serif;
+}
+.rmode-btns{display:flex;gap:6px}
+.rmode-btn{
+  padding:7px 18px;border-radius:20px;
+  font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;
+  border:1.5px solid rgba(93,196,168,.3);
+  background:rgba(255,255,255,.8);
+  color:var(--tx-m);cursor:pointer;
+  transition:all .18s;letter-spacing:.2px;
+}
+.rmode-btn.active{
+  background:linear-gradient(135deg,var(--tf),var(--tf-d));
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 14px rgba(93,196,168,.38);
+}
+.rmode-btn.active-dif{
+  background:linear-gradient(135deg,var(--gd),var(--tc));
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 14px rgba(212,175,106,.38);
+}
+.rmode-btn:active{transform:scale(.97)}
+.rmode-desc{
+  font-size:10.5px;color:var(--tx-l);
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+}
+
+/* ============================================================
+   MODE BADGE  (inside game HUD)
+   ============================================================ */
+.rg-mode-badge{
+  font-size:9px;font-weight:800;
+  letter-spacing:.8px;text-transform:uppercase;
+  padding:3px 8px;border-radius:8px;
+  background:rgba(93,196,168,.18);
+  color:rgba(157,222,202,.85);
+  border:1px solid rgba(93,196,168,.22);
+  font-family:'Nunito',sans-serif;
+}
+.rg-mode-badge.dificil{
+  background:rgba(212,175,106,.18);
+  color:rgba(237,216,154,.92);
+  border-color:rgba(212,175,106,.28);
+}
+
+</style>
+</head>
+<body>
+
+<div id="rapp">
+
+<!-- ===== FLOATING PETALS ===== -->
+<div id="rpetals"></div>
+
+<!-- ============================================================
+     WELCOME SCREEN
+     ============================================================ -->
+<div id="rsw" class="rscreen ron">
+  <div class="rw-flowers" id="rwf"></div>
+  <div class="rw-content">
+    <div class="rw-badge">🎵 Una experiencia musical especial</div>
+    <h1 class="rw-title">Latidos<br><em>para Britney</em></h1>
+    <p class="rw-sub">Un juego de ritmo floral hecho con amor</p>
+    <div class="rw-divider"></div>
+    <div class="rw-dedica">
+      "Para ti, Britney, que tienes el ritmo<br>
+      más hermoso de todos:<br>
+      <strong>el latido de tu corazón.</strong><br>
+      Que esta música te recuerde cuánto<br>te ama Dios y cuánto te amo yo."
+    </div>
+    <button class="btn-prime" onclick="showR('rss')">🌸 Elegir canción</button>
+    <a href="index.html" class="btn-sec">← Volver al inicio</a>
+  </div>
+</div>
+
+<!-- ============================================================
+     SONG SELECTION SCREEN
+     ============================================================ -->
+<div id="rss" class="rscreen">
+  <div class="rss-hdr">
+    <button class="btn-back" onclick="showR('rsw')">←</button>
+    <span class="rss-hdr-title">🎶 Elige una canción</span>
+  </div>
+  <!-- MODE SELECTOR -->
+  <div class="rmode-wrap">
+    <span class="rmode-lbl">Modo:</span>
+    <div class="rmode-btns">
+      <button class="rmode-btn active" id="mbtn-medio"   onclick="setMode('medio')">🌸 Medio</button>
+      <button class="rmode-btn"        id="mbtn-dificil" onclick="setMode('dificil')">🌟 Difícil</button>
+    </div>
+    <span class="rmode-desc" id="rmode-desc">Carril + tiempo</span>
+  </div>
+  <div class="rss-body" id="rss-body">
+    <!-- cards injected by JS -->
+  </div>
+</div>
+
+<!-- ============================================================
+     GAME SCREEN
+     ============================================================ -->
+<div id="rsg" class="rscreen">
+
+  <!-- Loading overlay -->
+  <div class="rg-loading" id="rgloading">
+    <div class="rg-spin"></div>
+    <div class="rg-load-tx">Preparando la música...</div>
+  </div>
+
+  <!-- Header -->
+  <div class="rg-hdr">
+    <div class="rg-song-nm" id="rg-song-nm">—</div>
+    <div class="rg-stats-row">
+      <div class="rg-stat">
+        <div class="rg-stat-lbl">Puntaje</div>
+        <div class="rg-stat-v" id="rg-score">0</div>
+      </div>
+      <div class="rg-stat">
+        <div class="rg-stat-lbl">✨ Combo</div>
+        <div class="rg-stat-v rg-stat-combo" id="rg-combo">0</div>
+      </div>
+      <div class="rg-stat">
+        <div class="rg-stat-lbl">Precisión</div>
+        <div class="rg-stat-v" id="rg-prec">—</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <span class="rg-mode-badge" id="rg-mode-badge">🌸 MEDIO</span>
+        <div class="rg-ctrls">
+          <button class="rg-cbtn" id="rg-mute" onclick="toggleMute()">🔊</button>
+          <button class="rg-cbtn" onclick="togglePause()">⏸</button>
+          <button class="rg-cbtn" onclick="exitToSelect()">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="rg-prog-rail"><div class="rg-prog-fill" id="rgprog"></div></div>
+
+  <!-- 3-lane game area -->
+  <div class="rg-area" id="rgarea">
+    <!-- Lane 0: Tiffany / nature -->
+    <div class="rg-lane rl0" id="rl0">
+      <div class="rg-lane-line"></div>
+      <div class="rg-notes-cn" id="rnc0"></div>
+      <div class="rg-lane-spacer"></div>
+      <div class="rg-hz" id="rhz0" data-l="0">
+        <div class="hz-icon">🌿</div>
+      </div>
+    </div>
+
+    <!-- Lane 1: Terracota / floral -->
+    <div class="rg-lane rl1" id="rl1">
+      <div class="rg-lane-line"></div>
+      <div class="rg-notes-cn" id="rnc1"></div>
+      <div class="rg-lane-spacer"></div>
+      <div class="rg-hz" id="rhz1" data-l="1">
+        <div class="hz-icon">🌷</div>
+      </div>
+    </div>
+
+    <!-- Lane 2: Gold / sun -->
+    <div class="rg-lane rl2" id="rl2">
+      <div class="rg-lane-line"></div>
+      <div class="rg-notes-cn" id="rnc2"></div>
+      <div class="rg-lane-spacer"></div>
+      <div class="rg-hz" id="rhz2" data-l="2">
+        <div class="hz-icon">🌻</div>
+      </div>
+    </div>
+
+    <!-- Shared overlays -->
+    <div class="rg-fblayer" id="rgfb"></div>
+    <div id="rgbanners" style="position:absolute;inset:0;pointer-events:none;z-index:25"></div>
+    <div id="rgmsgs"    style="position:absolute;inset:0;pointer-events:none;z-index:30"></div>
+    <div class="rmult" id="rgmult">x1</div>
+  </div>
+
+  <!-- Paused overlay -->
+  <div class="rg-paused" id="rgpaused">
+    <div class="rg-paused-ttl">⏸ Pausa</div>
+    <button class="rg-pbtn big" onclick="togglePause()">▶ Continuar</button>
+    <button class="rg-pbtn"     onclick="restartSong()">↺ Reiniciar canción</button>
+    <button class="rg-pbtn"     onclick="exitToSelect()">✕ Salir</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     RESULTS SCREEN
+     ============================================================ -->
+<div id="rsr" class="rscreen">
+  <div class="rr-icon" id="rr-icon">🌸</div>
+  <h2 class="rr-title">¡Hermoso, Britney!</h2>
+  <p class="rr-sub"  id="rr-sub">Canción completada</p>
+  <div class="rr-rec-badge" id="rr-badge" style="display:none">🏆 ¡Nuevo Récord Personal!</div>
+  <div class="rr-stats">
+    <div class="rr-row"><span class="rr-lbl">Puntaje final</span>       <span class="rr-val gold" id="rr-score">0</span></div>
+    <div class="rr-row"><span class="rr-lbl">Precisión</span>           <span class="rr-val"      id="rr-prec">0%</span></div>
+    <div class="rr-row"><span class="rr-lbl">Mejor combo</span>         <span class="rr-val"      id="rr-combo">0</span></div>
+    <div class="rr-row"><span class="rr-lbl">🏆 Récord anterior</span>  <span class="rr-val gold" id="rr-record">—</span></div>
+    <div class="rr-row"><span class="rr-lbl">Notas perfectas</span>     <span class="rr-val"      id="rr-perfs">0</span></div>
+    <div class="rr-row"><span class="rr-lbl">Notas falladas</span>      <span class="rr-val"      id="rr-miss">0</span></div>
+  </div>
+  <div class="rr-love">
+    <div class="rr-love-ic">💌</div>
+    <p class="rr-love-tx" id="rr-msg"></p>
+  </div>
+  <div class="rr-acts">
+    <button class="btn-prime" onclick="retrySong()">↺ Volver a jugar</button>
+    <button class="btn-sec"   onclick="showR('rss')">🎵 Elegir otra canción</button>
+    <button class="btn-sec"   onclick="showR('rsw')">🌸 Inicio</button>
+  </div>
+</div>
+
+</div><!-- #rapp -->
+
+<!-- Sparks layer -->
+<div id="rsparks"></div>
+<!-- Toasts -->
+<div id="rtoast"></div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+'use strict';
+
+/* ============================================================
+   TIMING CONSTANTS
+   ============================================================ */
+const TRAVEL_MS   = 1650;   // note travel time (top → hit zone) in ms
+const PERFECT_MS  = 105;    // ±ms window for "Perfect"
+const GOOD_MS     = 215;    // ±ms window for "Good"
+const MISS_LAG_MS = 270;    // ms after hit time → auto miss
+
+const SC_PERFECT  = 150;
+const SC_GOOD     = 80;
+const SC_COMBO_B  = 10;     // bonus per combo level
+
+// Combo milestones that trigger a banner + message
+const COMBO_MILES = [5, 10, 15, 20, 30, 50, 75, 100];
+
+/* ============================================================
+   DYNAMIC SPEED PRESETS  (per game mode)
+
+   MEDIO:   2800ms → 480ms  (clearly slow start, very fast end)
+   DIFÍCIL: 1300ms → 350ms  (already demanding at start, insane at end)
+
+   Curve strategy:
+   - MEDIO  uses easeInQuart (p^4): gentle in first half, big jump in second
+   - DIFÍCIL uses a split curve:  easeInQuint (p^5) with an extra
+     multiplier that kicks in from 70% onward, making the final stretch
+     feel almost impossibly fast.
+   ============================================================ */
+const SPEED_PRESETS = {
+  medio:   { start: 2800, end: 480 },
+  dificil: { start: 1300, end: 350 },
+};
+
+function getDynamicTravelMs(progress) {
+  const preset = SPEED_PRESETS[G.mode] || SPEED_PRESETS.medio;
+  const p      = Math.max(0, Math.min(1, progress));
+
+  let eased;
+  if (G.mode === 'dificil') {
+    // easeInQuint base, then an extra acceleration kick after 70%
+    const base = p * p * p * p * p;               // 0 → 1 very slow then explosive
+    const kick = p > 0.70
+      ? (p - 0.70) / 0.30 * 0.30                  // adds up to +0.30 from 70%→100%
+      : 0;
+    eased = Math.min(1, base + kick);
+  } else {
+    // easeInQuart: p^4 — noticeably faster ramp than cubic, still smooth
+    eased = p * p * p * p;
+  }
+
+  return preset.start + (preset.end - preset.start) * eased;
+}
+
+/* ============================================================
+   SONG DATA
+   ============================================================ */
+const SONGS = [
+  {
+    id:'vida-encontre',
+    titulo:'Vida encontré',
+    artista:'Majo y Dan',
+    archivo:'audio/vida-encontre.mp3',
+    emoji:'🌿',
+    frase:'Donde tú estás, hay vida y plenitud',
+    bpmManual:76,
+    offsetManual:2.0,
+    dificultad:'Suave',
+  },
+  {
+    id:'vamos-bien',
+    titulo:'Vamos bien',
+    artista:'Majo y Dan',
+    archivo:'audio/vamos-bien.mp3',
+    emoji:'🌸',
+    frase:'Juntos en Su amor, vamos bien',
+    bpmManual:88,
+    offsetManual:1.5,
+    dificultad:'Media',
+  },
+  {
+    id:'aleluya-bodas',
+    titulo:'Aleluya',
+    artista:'Versión para bodas',
+    archivo:'audio/aleluya-bodas.mp3',
+    emoji:'🕊️',
+    frase:'Todo es gracia en el amor eterno',
+    bpmManual:72,
+    offsetManual:2.2,
+    dificultad:'Suave',
+  },
+  {
+    id:'un-pacto-con-dios',
+    titulo:'Un pacto con Dios',
+    artista:'Canción cristiana',
+    archivo:'audio/un-pacto-con-dios.mp3',
+    emoji:'💒',
+    frase:'Unidos ante Él, por siempre',
+    bpmManual:70,
+    offsetManual:2.5,
+    dificultad:'Suave',
+  },
+  {
+    id:'tu-poeta',
+    titulo:'Tu Poeta',
+    artista:'Alex Campos',
+    archivo:'audio/tu-poeta.mp3',
+    emoji:'✨',
+    frase:'Eres mi inspiración, mi musa, mi amor',
+    bpmManual:80,
+    offsetManual:1.8,
+    dificultad:'Media',
+  }
+];
+
+/* Note emojis per lane */
+const NOTE_EM = [
+  ['🌿','🌱','🍃','🌾'],
+  ['🌷','🌺','🌸','💐'],
+  ['🌻','⭐','💛','✨']
+];
+
+/* ============================================================
+   ROMANTIC MESSAGES
+   ============================================================ */
+const MSGS_COMBO = [
+  "Muy bien, preciosa 🌸",
+  "Qué lindo es verte brillar ✨",
+  "Tu ritmo también es hermoso 💚",
+  "Me encantas, de verdad 💖",
+  "Tus ojitos resplandecen mis días 💫",
+  "Eres una bendición hermosa 🙏",
+  "Tu sonrisa alegra mi vida 🌻",
+  "Dios sí que se lució contigo 🌟",
+  "Tu belleza refleja la gracia de Dios 🕊️",
+  "Pareces una oración respondida 💌",
+  "Tu dulce voz es melodía para mis oídos 🎵",
+];
+const MSGS_FINAL = [
+  "Hay propósito, gracia y hermosura en ti",
+  "Tu dejito le da un toque especial a mi corazón",
+  "Eres una bendición hermosa en mi vida",
+  "Dios puso música en tu corazón",
+  "Cada nota que tocas es tan especial como tú",
+  "Tu sonrisa hermosa alegra mi vida entera",
+  "Así como las flores necesitan luz, yo necesito tu presencia",
+];
+const MSGS_RECORD = [
+  "¡Nuevo récord! Eres increíble, Britney 🏆",
+  "¡Superaste tu récord! ¡Qué talento tan hermoso! 🌟",
+  "¡Récord personal! Dios te dio mucho talento, preciosa 💫",
+];
+
+/* ============================================================
+   GAME STATE
+   ============================================================ */
+let G = {
+  songIdx: -1,
+  audio: null,
+  notes: [],          // complete note list for current song
+  active: [],         // currently visible note objects
+  nextIdx: 0,
+  score: 0,
+  combo: 0,
+  maxCombo: 0,
+  perfect: 0,
+  good: 0,
+  missed: 0,
+  total: 0,
+  running: false,
+  paused: false,
+  muted: false,
+  rafId: null,
+  laneH: 0,           // height of notes container (above hit zone)
+  lastMilestone: 0,   // last combo milestone triggered
+  /* NEW: mode and song duration for dynamic speed */
+  mode: 'medio',      // 'medio' | 'dificil'
+  songDuration: 180,  // seconds — used to compute per-note travel times
+};
+
+/* ============================================================
+   SCREEN MANAGEMENT
+   ============================================================ */
+function showR(id) {
+  document.querySelectorAll('.rscreen').forEach(s => s.classList.remove('ron'));
+  document.getElementById(id).classList.add('ron');
+}
+
+/* ============================================================
+   LOCAL STORAGE — RECORDS PER SONG
+   ============================================================ */
+function getRecords() {
+  try { return JSON.parse(localStorage.getItem('brt_ritmo') || '{}'); }
+  catch(e) { return {}; }
+}
+function saveRecord(songId, data) {
+  const r = getRecords();
+  if (!r[songId]) r[songId] = {};
+  const c = r[songId];
+  const isNew = data.score > (c.score || 0);
+  if (isNew) c.score = data.score;
+  c.combo = Math.max(c.combo || 0, data.combo);
+  c.prec  = Math.max(c.prec  || 0, data.prec);
+  localStorage.setItem('brt_ritmo', JSON.stringify(r));
+  return isNew;
+}
+
+/* ============================================================
+   SONG CARDS — RENDER
+   ============================================================ */
+function renderCards() {
+  const body = document.getElementById('rss-body');
+  const recs = getRecords();
+  body.innerHTML = '';
+  SONGS.forEach((s, i) => {
+    const r = recs[s.id] || {};
+    const tagCls = s.dificultad === 'Suave' ? 'tag-suave' : 'tag-media';
+    body.innerHTML += `
+    <div class="scard">
+      <div class="scard-emoji">${s.emoji}</div>
+      <div class="scard-info">
+        <div class="scard-titulo">${s.titulo}</div>
+        <div class="scard-artista">${s.artista}</div>
+        <div class="scard-frase">${s.frase}</div>
+        <div class="scard-meta">
+          <span class="scard-tag ${tagCls}">${s.dificultad}</span>
+          ${r.score ? `<span class="scard-rec">🏆 ${r.score.toLocaleString()}</span>` : ''}
+          ${r.combo ? `<span class="scard-rec">✨ x${r.combo}</span>` : ''}
+          ${r.prec  ? `<span class="scard-rec">🎯 ${r.prec}%</span>` : ''}
+        </div>
+      </div>
+      <button class="scard-btn" onclick="startSong(${i})" aria-label="Jugar ${s.titulo}">▶</button>
+    </div>`;
+  });
+}
+
+/* ============================================================
+   BPM DETECTION VIA WEB AUDIO API
+   Returns detected BPM or null if unreliable
+   ============================================================ */
+async function detectBPM(audioBuffer) {
+  try {
+    const sr = audioBuffer.sampleRate;
+    const ch = audioBuffer.getChannelData(0);
+
+    // Step 1: compute RMS energy per ~22ms frame
+    const fSize = Math.round(sr * 0.022);
+    const nFrames = Math.floor(ch.length / fSize);
+    const energy = new Float32Array(nFrames);
+    for (let i = 0; i < nFrames; i++) {
+      let s = 0, off = i * fSize;
+      for (let j = 0; j < fSize; j++) s += ch[off + j] * ch[off + j];
+      energy[i] = s / fSize;
+    }
+
+    // Step 2: adaptive threshold (85th percentile)
+    const sorted = Float32Array.from(energy).sort();
+    const thr = sorted[Math.floor(sorted.length * 0.85)];
+
+    // Step 3: peak picking (local max, min 200ms gap)
+    const minGap = Math.round(0.2 * sr / fSize);
+    const peaks = [];
+    for (let i = 1; i < nFrames - 1; i++) {
+      if (energy[i] < thr) continue;
+      if (energy[i] < energy[i-1] || energy[i] < energy[i+1]) continue;
+      if (peaks.length && i - peaks[peaks.length-1] < minGap) continue;
+      peaks.push(i);
+    }
+    if (peaks.length < 8) return null;
+
+    // Step 4: BPM from inter-peak intervals
+    const bpms = [];
+    for (let i = 1; i < peaks.length; i++) {
+      const iv = (peaks[i] - peaks[i-1]) * fSize / sr;
+      const b = 60 / iv;
+      if (b >= 55 && b <= 185) bpms.push(b);
+    }
+    if (bpms.length < 6) return null;
+
+    // Step 5: median BPM, check variance
+    bpms.sort((a,b) => a-b);
+    const med = bpms[Math.floor(bpms.length / 2)];
+    const cluster = bpms.filter(b => Math.abs(b - med) < 14);
+    const avg = cluster.reduce((a,b) => a+b, 0) / cluster.length;
+    const variance = cluster.reduce((a,b) => a + (b-avg)**2, 0) / cluster.length;
+
+    // High variance = unreliable → return null to use manual BPM
+    if (variance > 90) return null;
+    return Math.round(avg);
+  } catch(e) {
+    return null;
+  }
+}
+
+/* ============================================================
+   NOTE CHART GENERATION
+   Hybrid: detected BPM preferred, manual BPM as fallback.
+   Dynamic speed: each note carries its own travelSec.
+
+   Note types:
+     good  — must be tapped;  missing = fallo
+     bomb  — must NOT be tapped; tapping = fallo; passing = OK
+   Bombs only appear in modo difícil.
+   ============================================================ */
+function generateNotes(song, duration) {
+  const bpm    = song._detectedBPM || song.bpmManual;
+  const offset = song.offsetManual || 2.0;
+  const beat   = 60 / bpm;
+  const maxT   = Math.min(duration - 3.5, 195);
+
+  const notes = [];
+  let id = 0;
+
+  const PATS = [
+    [0,1,2,0,2,1,0,1,2,1,0,2,0,2,1,2],
+    [1,0,2,1,2,0,1,2,0,2,1,0,2,0,1,0],
+    [2,1,0,2,0,1,2,0,1,0,2,1,0,1,2,1],
+    [0,2,1,0,1,2,0,2,1,2,0,1,2,1,0,2],
+  ];
+  let pat = 0, pos = 0, beatN = 0, t = offset;
+
+  /* travelSec for a note at time t */
+  function noteTravel(noteTime) {
+    const progress = Math.max(0, Math.min(1,
+      (noteTime - offset) / Math.max(maxT - offset, 1)));
+    return getDynamicTravelMs(progress) / 1000;
+  }
+
+  /* Helper: push a note safely (avoids notes too close together) */
+  const recentByLane = [0, 0, 0]; // last time a note was added per lane
+  const MIN_GAP = beat * 0.38;    // minimum gap between notes on same lane
+
+  function pushNote(lane, time, type) {
+    if (time - recentByLane[lane] < MIN_GAP) return; // too close, skip
+    recentByLane[lane] = time;
+    const tSec = noteTravel(time);
+    const eArr = NOTE_EM[lane];
+    notes.push({
+      id: id++,
+      lane,
+      time,
+      emoji: type === 'bomb' ? '💣' : eArr[Math.floor(time * 10) % eArr.length],
+      type,
+      hit:       false,
+      missed:    false,
+      el:        null,
+      travelSec: tSec,
+      spawnAt:   time - tSec,
+    });
+  }
+
+  /* Bomb probability in difícil: rises across the song */
+  function maybeBomb(noteTime) {
+    if (G.mode !== 'dificil') return false;
+    const progress = Math.max(0, Math.min(1,
+      (noteTime - offset) / Math.max(maxT - offset, 1)));
+    let prob;
+    if      (progress < 0.30) prob = 0.18;
+    else if (progress < 0.60) prob = 0.28;
+    else                      prob = 0.40;
+    return Math.random() < prob;
+  }
+
+  let lastBombLane = -1;
+
+  while (t < maxT) {
+    const lane = PATS[pat % PATS.length][pos % 16];
+
+    // Decide type
+    const isBomb = maybeBomb(t) && lane !== lastBombLane;
+    if (isBomb) lastBombLane = lane; else if (lane !== lastBombLane) lastBombLane = -1;
+
+    pushNote(lane, t, isBomb ? 'bomb' : 'good');
+
+    /* ── Density fills: extra notes between main beats ── */
+
+    // Half-beat fill (every beat, 65% chance) — main density driver
+    if (Math.random() < 0.65) {
+      const l2 = PATS[(pat + 1) % PATS.length][(pos + 5) % 16];
+      const t2 = t + beat * 0.5;
+      if (t2 < maxT) pushNote(l2, t2, 'good');
+    }
+
+    // Quarter-beat fill (every 2 beats, 45% chance) — extra energy
+    if (beatN % 2 === 0 && Math.random() < 0.45) {
+      const l3 = (lane + 2) % 3;
+      const t3 = t + beat * 0.25;
+      if (t3 < maxT) pushNote(l3, t3, 'good');
+    }
+
+    // Three-quarter fill (every 3 beats, 38% chance)
+    if (beatN % 3 === 0 && Math.random() < 0.38) {
+      const l4 = (lane + 1) % 3;
+      const t4 = t + beat * 0.75;
+      if (t4 < maxT) pushNote(l4, t4, 'good');
+    }
+
+    beatN++;
+    pos++;
+    if (beatN % 16 === 0) pat = (pat + 1) % PATS.length;
+    t += beat;
+  }
+
+  notes.sort((a, b) => a.time - b.time);
+  return notes;
+}
+
+/* ============================================================
+   MEASURE GAME AREA
+   ============================================================ */
+function measureArea() {
+  const c = document.getElementById('rnc0');
+  if (c) {
+    G.laneH = c.getBoundingClientRect().height;
+  } else {
+    G.laneH = window.innerHeight * 0.52;
+  }
+}
+
+/* ============================================================
+   LOADING INDICATOR
+   ============================================================ */
+function setLoading(v) {
+  document.getElementById('rgloading').classList.toggle('vis', v);
+}
+
+/* ============================================================
+   START SONG
+   ============================================================ */
+async function startSong(idx) {
+  G.songIdx = idx;
+  const song = SONGS[idx];
+
+  showR('rsg');
+  setLoading(true);
+
+  // Stop previous audio
+  if (G.audio) { try { G.audio.pause(); } catch(e){} G.audio = null; }
+  if (G.rafId)  { cancelAnimationFrame(G.rafId); G.rafId = null; }
+
+  // Clear visual state
+  [0,1,2].forEach(l => {
+    const c = document.getElementById('rnc'+l); if(c) c.innerHTML='';
+  });
+  document.getElementById('rgfb').innerHTML      = '';
+  document.getElementById('rgbanners').innerHTML = '';
+  document.getElementById('rgmsgs').innerHTML    = '';
+
+  // Reset game state
+  Object.assign(G, {
+    score:0, combo:0, maxCombo:0,
+    perfect:0, good:0, missed:0, total:0,
+    notes:[], active:[], nextIdx:0,
+    running:false, paused:false, lastMilestone:0,
+  });
+
+  // UI
+  document.getElementById('rg-song-nm').textContent = `${song.titulo} — ${song.artista}`;
+  document.getElementById('rgprog').style.width = '0%';
+  // Update mode badge
+  const badge = document.getElementById('rg-mode-badge');
+  if (badge) {
+    badge.textContent = G.mode === 'medio' ? '🌸 MEDIO' : '🌟 DIFÍCIL';
+    badge.classList.toggle('dificil', G.mode === 'dificil');
+  }
+  updateHUD();
+
+  // Measure after DOM has updated (two rAF)
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  measureArea();
+
+  // --- Attempt BPM detection ---
+  song._detectedBPM = null;
+  song._duration    = null;
+
+  try {
+    const resp = await fetch(song.archivo);
+    if (resp.ok) {
+      const abuf = await resp.arrayBuffer();
+      // Decode in offline context
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const decoded = await ctx.decodeAudioData(abuf.slice(0));
+      await ctx.close();
+      song._duration    = decoded.duration;
+      song._detectedBPM = await detectBPM(decoded);
+    }
+  } catch(e) {
+    // Audio fetch may fail for local files — fallback to manual BPM silently
+  }
+
+  const usedBPM = song._detectedBPM || song.bpmManual;
+  const dur     = song._duration    || 180;
+  G.songDuration = dur; // store for dynamic speed calculation
+
+  // Generate notes
+  G.notes = generateNotes(song, dur);
+  G.total = G.notes.length;
+
+  // Setup audio element
+  G.audio = new Audio(song.archivo);
+  G.audio.volume  = G.muted ? 0 : 1;
+  G.audio.preload = 'auto';
+
+  setLoading(false);
+
+  G.audio.addEventListener('ended',  onSongEnd, { once: true });
+  G.audio.addEventListener('error',  () => {
+    // Audio might not exist — still show the game visually
+    rToast('No se pudo cargar el audio 🎵', '⚠️');
+  });
+
+  // Play (this is triggered by user tap, so autoplay should be allowed)
+  try { await G.audio.play(); }
+  catch(e) { rToast('Toca para activar el audio 🎵', '🎶'); }
+
+  G.running = true;
+  G.paused  = false;
+  document.getElementById('rgpaused').classList.remove('vis');
+  startLoop();
+}
+
+/* ============================================================
+   GAME LOOP
+   ============================================================ */
+function startLoop() {
+  G.rafId = requestAnimationFrame(gameLoop);
+}
+
+function gameLoop() {
+  if (!G.running) return;
+  if (G.paused)   { G.rafId = requestAnimationFrame(gameLoop); return; }
+
+  const now  = G.audio ? G.audio.currentTime : 0;
+  const song = SONGS[G.songIdx];
+  const dur  = song._duration || 180;
+
+  // Progress bar
+  document.getElementById('rgprog').style.width = Math.min(now / dur * 100, 100) + '%';
+
+  // Spawn notes entering the travel window
+  while (G.nextIdx < G.notes.length) {
+    const n = G.notes[G.nextIdx];
+    // Each note has its own spawn time (precomputed with dynamic travel)
+    if (now >= n.spawnAt) {
+      spawnNote(n);
+      G.nextIdx++;
+    } else break;
+  }
+
+  // Update positions & detect misses
+  const toRemove = [];
+  for (const n of G.active) {
+    if (n.hit || n.missed) { toRemove.push(n); continue; }
+
+    // y position using this note's individual travel duration
+    const elapsed  = now - n.spawnAt;
+    const progress = elapsed / n.travelSec;
+    const y        = progress * G.laneH;
+
+    if (n.el) n.el.style.transform = `translateX(-50%) translateY(${y}px)`;
+
+    // Auto-miss when note has passed the hit window
+    if ((now - n.time) * 1000 > MISS_LAG_MS) {
+      registerMiss(n);
+      toRemove.push(n);
+    }
+  }
+
+  for (const n of toRemove) {
+    const i = G.active.indexOf(n);
+    if (i >= 0) G.active.splice(i, 1);
+    if (n.el) { n.el.remove(); n.el = null; }
+  }
+
+  // Multiplier display
+  updateMult();
+
+  G.rafId = requestAnimationFrame(gameLoop);
+}
+
+/* ============================================================
+   SPAWN NOTE
+   ============================================================ */
+function spawnNote(n) {
+  const container = document.getElementById('rnc' + n.lane);
+  if (!container) return;
+
+  const el = document.createElement('div');
+  // good notes use lane colour; bomb notes get dark crimson .rbomb styling
+  el.className = `rnote nl${n.lane}${n.type === 'bomb' ? ' rbomb' : ''}`;
+  el.textContent = n.emoji;
+  el.style.transform = 'translateX(-50%) translateY(-64px)';
+  container.appendChild(el);
+
+  n.el = el;
+  G.active.push(n);
+}
+
+/* ============================================================
+   INPUT — TOUCH & MOUSE
+   ============================================================ */
+function initInput() {
+  [0, 1, 2].forEach(lane => {
+    const laneEl = document.getElementById('rl' + lane);
+    const hzEl   = document.getElementById('rhz' + lane);
+
+    // Touch on entire lane
+    laneEl.addEventListener('touchstart', e => {
+      e.preventDefault();
+      pressLane(lane);
+    }, { passive: false });
+
+    // Mouse (desktop)
+    laneEl.addEventListener('mousedown', () => pressLane(lane));
+
+    // Visual release
+    const release = () => hzEl.classList.remove('hzp');
+    laneEl.addEventListener('touchend',   release);
+    laneEl.addEventListener('touchcancel',release);
+    laneEl.addEventListener('mouseup',    release);
+  });
+}
+
+function pressLane(lane) {
+  if (!G.running || G.paused) return;
+
+  const hz = document.getElementById('rhz' + lane);
+  hz.classList.add('hzp');
+  setTimeout(() => hz.classList.remove('hzp'), 160);
+
+  const now = (G.audio ? G.audio.currentTime : 0) * 1000; // convert to ms
+
+  // Find the closest unhit note in this lane within GOOD window
+  let best = null, bestDiff = Infinity;
+  for (const n of G.notes) {
+    if (n.lane !== lane || n.hit || n.missed) continue;
+    const diff = Math.abs(now - n.time * 1000);
+    if (diff < GOOD_MS + 80 && diff < bestDiff) { best = n; bestDiff = diff; }
+  }
+
+  if (!best) return; // no note in window — empty tap, no penalty
+
+  // ── DIFÍCIL MODE: tapping a bomb is a fallo ──
+  if (G.mode === 'dificil' && best.type === 'bomb') {
+    registerFail(best, lane);
+    return;
+  }
+
+  if (bestDiff <= PERFECT_MS)   registerHit(best, 'perfect');
+  else if (bestDiff <= GOOD_MS) registerHit(best, 'good');
+}
+
+/* ============================================================
+   HIT / MISS
+   ============================================================ */
+function registerHit(n, type) {
+  n.hit = true;
+
+  const pts = (type === 'perfect' ? SC_PERFECT : SC_GOOD) + G.combo * SC_COMBO_B;
+  G.score   += pts;
+  G.combo++;
+  G.maxCombo = Math.max(G.maxCombo, G.combo);
+  if (type === 'perfect') G.perfect++;
+  else                    G.good++;
+
+  updateHUD();
+  flashHitZone(n.lane, 'hit');
+  showFeedback(type === 'perfect' ? 'Perfecto ✨' : 'Muy bien 🌸', type);
+  showBurst(n.lane);
+  checkMilestone();
+
+  // Detach from game loop, freeze current Y, then play hit-flash
+  if (n.el) {
+    const el = n.el;
+    n.el = null;
+
+    const curTx = el.style.transform || 'translateX(-50%) translateY(0px)';
+    const match = curTx.match(/translateY\(([^)]+)\)/);
+    const curY  = match ? match[1] : '0px';
+
+    el.style.setProperty('--note-y', curY);
+    el.style.transform = `translateX(-50%) translateY(${curY})`;
+    el.classList.add('n-hit-flash');
+
+    setTimeout(() => el.remove(), 240);
+  }
+}
+
+function registerMiss(n) {
+  n.missed = true;
+
+  // Bombs that pass without being tapped = correct — no penalty, silent removal
+  if (n.type === 'bomb') {
+    if (n.el) { n.el.remove(); n.el = null; }
+    return;
+  }
+
+  G.combo  = 0;
+  G.missed++;
+  updateHUD();
+  flashHitZone(n.lane, 'fail');
+  showFeedback('...', 'miss');
+}
+
+/* ============================================================
+   REGISTER FAIL  (difícil: tapped a bomb note)
+   ============================================================ */
+function registerFail(n, lane) {
+  n.hit    = true;  // consume so it doesn't trigger registerMiss later
+  G.combo  = 0;
+  G.missed++;
+  updateHUD();
+  flashHitZone(lane, 'fail');
+  showFeedback('¡Bomba! 💥', 'miss');
+
+  // Detach from game loop, freeze current Y, then play bomb-flash
+  if (n.el) {
+    const el = n.el;
+    n.el = null;
+
+    const curTx = el.style.transform || 'translateX(-50%) translateY(0px)';
+    const match = curTx.match(/translateY\(([^)]+)\)/);
+    const curY  = match ? match[1] : '0px';
+
+    el.style.setProperty('--note-y', curY);
+    el.style.transform = `translateX(-50%) translateY(${curY})`;
+    el.classList.add('n-bomb-flash');
+
+    setTimeout(() => el.remove(), 300);
+  }
+}
+
+/* ============================================================
+   FLASH HIT ZONE  (visual feedback on button)
+   ============================================================ */
+function flashHitZone(lane, type) {
+  const hz  = document.getElementById('rhz' + lane);
+  if (!hz) return;
+  const cls = type === 'hit' ? 'is-hit' : 'is-fail';
+  hz.classList.remove('is-hit', 'is-fail');
+  void hz.offsetWidth;  // force reflow so animation restarts cleanly
+  hz.classList.add(cls);
+  setTimeout(() => hz.classList.remove(cls), type === 'hit' ? 390 : 460);
+}
+
+/* ============================================================
+   SET GAME MODE
+   ============================================================ */
+function setMode(m) {
+  G.mode = m;
+  // Update selector button states
+  document.getElementById('mbtn-medio').classList.toggle('active',        m === 'medio');
+  document.getElementById('mbtn-medio').classList.remove('active-dif');
+  document.getElementById('mbtn-dificil').classList.remove('active');
+  document.getElementById('mbtn-dificil').classList.toggle('active-dif',  m === 'dificil');
+  // Update description hint
+  const desc = document.getElementById('rmode-desc');
+  if (desc) desc.textContent = m === 'medio'
+    ? 'Solo notas — carril + tiempo'
+    : 'Notas + bombas 💣 — ¡no las toques!';
+}
+
+/* ============================================================
+   VISUAL FEEDBACK
+   ============================================================ */
+function showFeedback(text, type) {
+  const fb = document.getElementById('rgfb');
+  const el = document.createElement('div');
+  el.className = 'rfbw ' + (type === 'perfect' ? 'rfp' : type === 'good' ? 'rfg' : 'rfm');
+  el.textContent = text;
+  fb.appendChild(el);
+  setTimeout(() => el.remove(), 560);
+}
+
+function showBurst(lane) {
+  const c = document.getElementById('rgbanners');
+  const laneEl = document.getElementById('rl' + lane);
+  const gameEl = document.getElementById('rsg');
+  if (!laneEl || !gameEl) return;
+
+  const lr = laneEl.getBoundingClientRect();
+  const gr = gameEl.getBoundingClientRect();
+  const burstColors = [
+    'radial-gradient(circle,rgba(93,196,168,.55),transparent 70%)',
+    'radial-gradient(circle,rgba(196,117,74,.48),transparent 70%)',
+    'radial-gradient(circle,rgba(212,175,106,.5),transparent 70%)',
+  ];
+
+  const el = document.createElement('div');
+  el.className = 'rburst';
+  el.style.cssText = [
+    `left:${lr.left - gr.left + lr.width/2 - 40}px`,
+    `top:${lr.bottom - gr.top - 88 - 40}px`,
+    `position:absolute`,
+    `background:${burstColors[lane]}`,
+  ].join(';');
+  c.appendChild(el);
+  setTimeout(() => el.remove(), 450);
+}
+
+function checkMilestone() {
+  for (const m of COMBO_MILES) {
+    if (G.combo === m && G.combo > G.lastMilestone) {
+      G.lastMilestone = m;
+      showComboBanner(m);
+      showGameMsg(MSGS_COMBO[Math.floor(Math.random() * MSGS_COMBO.length)]);
+      break;
+    }
+  }
+}
+
+function showComboBanner(n) {
+  const el = document.createElement('div');
+  el.className = 'rcbanner';
+  el.innerHTML = `<div class="rcb-num">x${n}</div><div class="rcb-txt">¡Combo hermoso! 🌸</div>`;
+  document.getElementById('rgbanners').appendChild(el);
+  setTimeout(() => el.remove(), 2500);
+}
+
+function showGameMsg(msg) {
+  const el = document.createElement('div');
+  el.className = 'rmsg';
+  el.innerHTML = `<div class="rmsg-tx">${msg}</div>`;
+  document.getElementById('rgmsgs').appendChild(el);
+  setTimeout(() => el.remove(), 3100);
+}
+
+/* ============================================================
+   HUD
+   ============================================================ */
+function updateHUD() {
+  document.getElementById('rg-score').textContent = G.score.toLocaleString();
+  const comboEl = document.getElementById('rg-combo');
+  comboEl.textContent = G.combo;
+  comboEl.classList.remove('combo-pulse');
+  void comboEl.offsetWidth;
+  if (G.combo > 0) comboEl.classList.add('combo-pulse');
+
+  const total = G.perfect + G.good + G.missed;
+  const prec = total > 0
+    ? Math.round((G.perfect + G.good * 0.6) / total * 100)
+    : 100;
+  document.getElementById('rg-prec').textContent = prec + '%';
+}
+
+function updateMult() {
+  const m = Math.min(1 + Math.floor(G.combo / 10), 8);
+  const el = document.getElementById('rgmult');
+  el.textContent = 'x' + m;
+  el.classList.toggle('vis', m > 1);
+}
+
+/* ============================================================
+   PAUSE / RESUME
+   ============================================================ */
+function togglePause() {
+  if (!G.running) return;
+  G.paused = !G.paused;
+  const ov = document.getElementById('rgpaused');
+  if (G.paused) {
+    if (G.audio) G.audio.pause();
+    ov.classList.add('vis');
+  } else {
+    if (G.audio) G.audio.play().catch(() => {});
+    ov.classList.remove('vis');
+  }
+}
+
+function toggleMute() {
+  G.muted = !G.muted;
+  if (G.audio) G.audio.volume = G.muted ? 0 : 1;
+  document.getElementById('rg-mute').textContent = G.muted ? '🔇' : '🔊';
+}
+
+function restartSong() {
+  document.getElementById('rgpaused').classList.remove('vis');
+  startSong(G.songIdx);
+}
+
+function exitToSelect() {
+  G.running = false;
+  if (G.audio) { try { G.audio.pause(); } catch(e){} }
+  if (G.rafId) { cancelAnimationFrame(G.rafId); G.rafId = null; }
+  document.getElementById('rgpaused').classList.remove('vis');
+  renderCards();
+  showR('rss');
+}
+
+/* ============================================================
+   SONG END
+   ============================================================ */
+function onSongEnd() {
+  // Wait a moment for last notes to resolve
+  setTimeout(finishGame, 1600);
+}
+
+function finishGame() {
+  G.running = false;
+  if (G.rafId) { cancelAnimationFrame(G.rafId); G.rafId = null; }
+
+  // Precision uses only good notes (bombs passing silently don't count as misses)
+  const goodTotal = G.perfect + G.good + G.missed;
+  const prec      = goodTotal > 0
+    ? Math.round((G.perfect + G.good * 0.6) / goodTotal * 100)
+    : 100;
+
+  const song    = SONGS[G.songIdx];
+  const isRec   = saveRecord(song.id, { score: G.score, combo: G.maxCombo, prec });
+  const records = getRecords();
+  const rec     = records[song.id] || {};
+
+  // Fill results screen
+  document.getElementById('rr-icon').textContent   = G.score > 8000 ? '🏆' : prec > 85 ? '🌸' : '✨';
+  document.getElementById('rr-sub').textContent     = song.titulo;
+  document.getElementById('rr-score').textContent   = G.score.toLocaleString();
+  document.getElementById('rr-prec').textContent    = prec + '%';
+  document.getElementById('rr-combo').textContent   = 'x' + G.maxCombo;
+  document.getElementById('rr-record').textContent  = rec.score ? rec.score.toLocaleString() + ' pts' : '—';
+  document.getElementById('rr-perfs').textContent   = G.perfect;
+  document.getElementById('rr-miss').textContent    = G.missed;
+  document.getElementById('rr-badge').style.display = isRec ? 'inline-block' : 'none';
+
+  const finalMsg = isRec
+    ? MSGS_RECORD[Math.floor(Math.random() * MSGS_RECORD.length)]
+    : MSGS_FINAL[Math.floor(Math.random() * MSGS_FINAL.length)];
+  document.getElementById('rr-msg').textContent = finalMsg;
+
+  showR('rsr');
+  celebrate();
+  renderCards(); // update records on selection screen
+}
+
+function retrySong() { startSong(G.songIdx); }
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+function rToast(tx, em) {
+  const w = document.getElementById('rtoast');
+  const d = document.createElement('div');
+  d.className = 'rtoast-item';
+  d.innerHTML = `<div class="rtoast-em">${em}</div><div class="rtoast-tx">${tx}</div>`;
+  w.appendChild(d);
+  setTimeout(() => d.remove(), 3600);
+}
+
+/* ============================================================
+   CELEBRATION CONFETTI
+   ============================================================ */
+function celebrate() {
+  const COLS = ['#5DC4A8','#E8A070','#D4AF6A','#C897A0','#F4D882','#9DDECA','#FAE8DC'];
+  const l = document.getElementById('rsparks');
+  for (let i = 0; i < 65; i++) {
+    const d = document.createElement('div');
+    d.className = 'rconfp';
+    const sz  = 5 + Math.random() * 10;
+    const dur = (1.4 + Math.random() * 2.4) + 's';
+    const del = (Math.random() * 0.9) + 's';
+    Object.assign(d.style, {
+      width: sz+'px', height: sz+'px',
+      left: Math.random()*100+'vw', top: 0,
+      background: COLS[Math.floor(Math.random()*COLS.length)],
+      borderRadius: Math.random() > .5 ? '50%' : '3px',
+      animationDuration: dur,
+      animationDelay: del,
+    });
+    l.appendChild(d);
+    setTimeout(() => d.remove(), 4800);
+  }
+}
+
+/* ============================================================
+   FLOATING PETALS INIT
+   ============================================================ */
+function initPetals() {
+  const layer  = document.getElementById('rpetals');
+  const petals = ['🌸','🌺','🌷','✨','🍃','💫','🌼','🌻','🌱','💐'];
+  for (let i = 0; i < 20; i++) {
+    const d = document.createElement('div');
+    d.className = 'rpetal';
+    d.textContent = petals[i % petals.length];
+    Object.assign(d.style, {
+      left:              (Math.random() * 100) + '%',
+      fontSize:          (11 + Math.random() * 11) + 'px',
+      animationDuration: (9 + Math.random() * 13) + 's',
+      animationDelay:    -(Math.random() * 16) + 's',
+    });
+    layer.appendChild(d);
+  }
+}
+
+/* ============================================================
+   WELCOME FLOWERS (matching index.html SVG style)
+   ============================================================ */
+function makeSunflower(sz) {
+  const p = [0,45,90,135,180,225,270,315]
+    .map(d => `<ellipse cx="30" cy="11" rx="4.5" ry="12" fill="#F4C842" transform="rotate(${d},30,30)"/>`)
+    .join('');
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+    ${p}
+    <circle cx="30" cy="30" r="11" fill="#8B5530"/>
+    <circle cx="26" cy="27" r="1.8" fill="#6B3510"/>
+    <circle cx="34" cy="27" r="1.8" fill="#6B3510"/>
+    <circle cx="30" cy="34" r="1.8" fill="#6B3510"/>
+  </svg>`;
+}
+function makeRose(sz) {
+  const w = Math.round(sz * .7);
+  return `<svg width="${w}" height="${sz}" viewBox="0 0 42 70" xmlns="http://www.w3.org/2000/svg">
+    <line x1="21" y1="44" x2="21" y2="68" stroke="#5A8C6A" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M21,58 Q32,50 30,42 Q26,52 21,58" fill="#7AB87A"/>
+    <ellipse cx="21" cy="30" rx="13" ry="9" fill="#E8909A" opacity=".85"/>
+    <ellipse cx="21" cy="27" rx="9" ry="7" fill="#D4688A"/>
+    <ellipse cx="21" cy="25" rx="6" ry="5" fill="#C0507A"/>
+    <circle cx="21" cy="23" r="3.5" fill="#A03565"/>
+  </svg>`;
+}
+function makeTulip(sz) {
+  const w = Math.round(sz * .65);
+  return `<svg width="${w}" height="${sz}" viewBox="0 0 42 80" xmlns="http://www.w3.org/2000/svg">
+    <line x1="21" y1="55" x2="21" y2="76" stroke="#5A8C6A" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M21,65 Q10,56 14,46 Q18,57 21,65" fill="#7AB87A"/>
+    <path d="M13,36 Q10,20 21,18 Q32,20 29,36 Q27,51 21,53 Q15,51 13,36Z" fill="#C4754A"/>
+    <path d="M19,36 Q17,22 21,20 Q24,20 22,31 Q21,42 21,53 Q20,42 19,36Z" fill="#E8A070" opacity=".5"/>
+  </svg>`;
+}
+function initWelcomeFlowers() {
+  const flowers = [
+    makeSunflower(52), makeRose(66), makeTulip(74),
+    makeRose(56),      makeTulip(62), makeSunflower(48)
+  ];
+  document.getElementById('rwf').innerHTML =
+    `<div style="display:flex;gap:10px;align-items:flex-end">${flowers.join('')}</div>`;
+}
+
+/* ============================================================
+   HANDLE RESIZE
+   ============================================================ */
+window.addEventListener('resize', () => {
+  if (document.getElementById('rsg').classList.contains('ron')) {
+    measureArea();
+  }
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+  initPetals();
+  initWelcomeFlowers();
+  renderCards();
+  initInput();
+}
+
+init();
+</script>
+</body>
+</html>

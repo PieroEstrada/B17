@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rompecabezas ✦ Para Britney</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --tf:#5DC4A8;--tf-l:#9DDECA;--tf-d:#3A9A80;--tf-p:#E0F5EF;
+  --wh:#FFFDF9;--cr:#FDF6EE;
+  --tc:#C4754A;--tc-l:#E8A07A;--tc-p:#FAE8DC;--tc-d:#9A4F2A;
+  --gd:#D4AF6A;--gd-l:#EDD89A;
+  --tx:#3A2520;--tx-m:#7A5048;--tx-l:#AA8070;
+  --sd:0 4px 24px rgba(60,30,20,.12);
+  --sd2:0 8px 32px rgba(60,30,20,.15);
+  --r:16px;
+}
+html,body{
+  height:100%;overflow:hidden;
+  font-family:'Nunito',sans-serif;
+  background:var(--cr);color:var(--tx);
+  touch-action:none;
+  -webkit-font-smoothing:antialiased;
+}
+#app{height:100%;position:relative;overflow:hidden}
+
+/* ── SCREENS ──────────────────────────────── */
+.sc{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s ease;
+  overflow:hidden;
+}
+.sc.on{opacity:1;pointer-events:all}
+
+/* ── WELCOME ──────────────────────────────── */
+#sw{
+  background:linear-gradient(160deg,#D8F5EC 0%,#FDF8F2 48%,#FAE8DC 100%);
+  align-items:center;overflow-y:auto;
+}
+.sw-flowers{width:100%;padding:32px 20px 0;display:flex;justify-content:center}
+.sw-content{
+  padding:16px 28px 56px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  width:100%;max-width:420px;
+}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--tc);font-weight:600;margin-bottom:10px}
+.sw-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:46px;font-weight:600;line-height:1.05;color:var(--tx);margin-bottom:5px;
+}
+.sw-title em{color:var(--tf-d);font-style:italic}
+.sw-sub{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--tx-m);margin-bottom:18px}
+.sw-divider{width:64px;height:1px;margin:0 auto 18px;background:linear-gradient(to right,transparent,var(--tc),transparent)}
+.sw-desc{
+  font-size:14px;line-height:1.75;color:var(--tx-m);max-width:300px;margin-bottom:28px;
+}
+.sw-desc strong{color:var(--tc-d)}
+
+/* Buttons */
+.btn-p{
+  background:linear-gradient(135deg,var(--tf),var(--tf-d));
+  color:#fff;border:none;border-radius:30px;
+  padding:16px 48px;font-family:'Nunito',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:.3px;
+  cursor:pointer;overflow:hidden;position:relative;
+  box-shadow:0 8px 24px rgba(93,196,168,.4);
+  transition:transform .15s;
+}
+.btn-p::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.22) 0%,transparent 55%)}
+.btn-p:active{transform:scale(.97)}
+.btn-s{
+  background:rgba(255,255,255,.8);color:var(--tx-m);border:1px solid rgba(93,196,168,.3);
+  border-radius:30px;padding:12px 32px;
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .15s;margin-top:10px;
+  display:inline-block;text-decoration:none;text-align:center;
+}
+.btn-s:active{transform:scale(.97);background:var(--tf-p)}
+
+/* ── PHOTO SELECTION ──────────────────────── */
+#sph{background:var(--cr)}
+.hdr{
+  background:rgba(253,246,238,.96);backdrop-filter:blur(12px);
+  padding:10px 18px;border-bottom:1px solid rgba(93,196,168,.18);
+  display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+.hdr-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--tx);flex:1}
+.btn-back{
+  background:rgba(255,255,255,.85);border:1px solid rgba(93,196,168,.25);
+  border-radius:50%;width:38px;height:38px;
+  font-size:18px;cursor:pointer;color:var(--tx-m);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.scroll-body{flex:1;overflow-y:auto;padding:16px 14px 48px}
+
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(min-width:480px){.photo-grid{grid-template-columns:repeat(4,1fr)}}
+
+.photo-card{
+  border-radius:16px;overflow:hidden;
+  border:2px solid transparent;
+  cursor:pointer;position:relative;
+  transition:transform .15s,border-color .15s;
+  box-shadow:var(--sd);
+}
+.photo-card:active{transform:scale(.96)}
+.photo-card img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:var(--tf-p)}
+.photo-card .photo-label{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(58,37,32,.72),transparent);
+  padding:10px 8px 6px;
+  font-size:11px;font-weight:700;color:#fff;text-align:center;
+}
+
+.photo-placeholder{
+  width:100%;aspect-ratio:1;
+  background:linear-gradient(135deg,var(--tf-p),var(--tc-p));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;
+}
+.photo-placeholder span{font-size:28px}
+.photo-placeholder p{font-size:10px;color:var(--tx-m);text-align:center;padding:0 6px;line-height:1.3}
+
+/* ── DIFFICULTY SELECTION ────────────────── */
+#sdif{background:var(--cr)}
+.diff-body{flex:1;overflow-y:auto;padding:20px 16px 48px;max-width:420px;margin:0 auto;width:100%}
+.diff-preview{
+  width:100%;max-width:200px;margin:0 auto 20px;
+  border-radius:16px;overflow:hidden;
+  border:2px solid rgba(93,196,168,.25);
+  box-shadow:var(--sd);
+}
+.diff-preview img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:var(--tf-p)}
+.diff-preview-ph{
+  width:100%;aspect-ratio:1;
+  background:linear-gradient(135deg,var(--tf-p),var(--tc-p));
+  display:flex;align-items:center;justify-content:center;font-size:40px;
+}
+
+.section-ttl{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:600;color:var(--tx);
+  margin-bottom:12px;text-align:center;
+}
+
+.diff-presets{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.diff-preset{
+  background:rgba(255,255,255,.85);border:2px solid rgba(93,196,168,.22);
+  border-radius:16px;padding:14px 10px;
+  font-family:'Nunito',sans-serif;
+  cursor:pointer;text-align:center;transition:all .15s;
+}
+.diff-preset:active{transform:scale(.96)}
+.diff-preset.sel{
+  background:linear-gradient(135deg,var(--tf-p),var(--tc-p));
+  border-color:var(--tf);
+}
+.diff-preset .dp-grid{font-size:22px;margin-bottom:4px}
+.diff-preset .dp-name{font-size:13px;font-weight:800;color:var(--tx)}
+.diff-preset .dp-sub{font-size:11px;color:var(--tx-l)}
+
+.custom-row{
+  background:rgba(255,255,255,.8);border:1px solid rgba(93,196,168,.2);
+  border-radius:16px;padding:16px;margin-bottom:18px;
+}
+.custom-row-title{font-size:12px;font-weight:700;color:var(--tx-m);margin-bottom:10px;letter-spacing:.3px}
+.custom-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.custom-field label{display:block;font-size:11px;color:var(--tx-l);margin-bottom:4px;font-weight:700;letter-spacing:.3px}
+.custom-field input{
+  width:100%;border:1.5px solid rgba(93,196,168,.3);border-radius:10px;
+  padding:10px 12px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;
+  color:var(--tx);background:#fff;
+  text-align:center;
+}
+.custom-field input:focus{outline:none;border-color:var(--tf)}
+
+/* ── GAME SCREEN ──────────────────────────── */
+#sg{background:var(--cr)}
+
+.game-hdr{
+  background:rgba(253,246,238,.96);backdrop-filter:blur(12px);
+  padding:8px 14px;border-bottom:1px solid rgba(93,196,168,.18);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.game-hdr-stat{display:flex;flex-direction:column;align-items:center;flex:1}
+.game-hdr-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--tx-l)}
+.game-hdr-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:500;color:var(--tf-d);line-height:1;
+}
+.game-hdr-sep{width:1px;height:36px;background:rgba(93,196,168,.2)}
+
+.puzzle-area{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:12px;overflow:hidden;
+}
+.puzzle-grid{
+  display:grid;gap:2px;
+  width:min(calc(100vw - 24px), calc(100vh - 140px));
+  height:min(calc(100vw - 24px), calc(100vh - 140px));
+  touch-action:none;
+  user-select:none;
+}
+
+.piece{
+  border-radius:4px;
+  background-size:cover;background-position:center;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .15s,box-shadow .15s;
+  background-color:var(--tf-p);
+}
+.piece::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 55%);
+  pointer-events:none;
+}
+.piece.selected{
+  transform:scale(.95);z-index:2;
+  box-shadow:0 0 0 3px var(--tc),0 4px 16px rgba(196,117,74,.45);
+}
+.piece.correct{
+  box-shadow:0 0 0 2px var(--tf);
+}
+.piece.solved-anim{
+  animation:piece-land .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes piece-land{
+  0%{transform:scale(.88);opacity:.7}
+  100%{transform:scale(1);opacity:1}
+}
+
+.game-actions{
+  padding:8px 14px 16px;
+  display:flex;gap:8px;flex-shrink:0;
+}
+.btn-g{
+  flex:1;padding:10px 6px;border:none;border-radius:12px;
+  font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;
+  cursor:pointer;transition:all .15s;
+}
+.btn-g:active{transform:scale(.95)}
+.btn-g-sh{background:var(--tc-p);color:var(--tc-d);border:1px solid rgba(196,117,74,.2)}
+.btn-g-ex{background:#fff;color:var(--tx-m);border:1px solid rgba(93,196,168,.22)}
+.btn-g-ok{background:linear-gradient(135deg,var(--tf),var(--tf-d));color:#fff;box-shadow:0 4px 14px rgba(93,196,168,.35)}
+
+/* Selected piece hint */
+.sel-hint{
+  padding:5px 14px 0;
+  font-size:12px;color:var(--tx-m);text-align:center;
+  font-style:italic;font-family:'Cormorant Garamond',serif;
+  flex-shrink:0;min-height:22px;
+}
+
+/* ── COMPLETION SCREEN ────────────────────── */
+#scomp{
+  background:linear-gradient(160deg,var(--tf-p) 0%,var(--wh) 40%,var(--tc-p) 100%);
+  align-items:center;justify-content:center;
+  text-align:center;overflow-y:auto;
+  padding:36px 24px 56px;
+}
+.comp-icon{font-size:64px;margin-bottom:14px;animation:ci-in .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes ci-in{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.comp-title{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:var(--tx);margin-bottom:6px}
+.comp-sub{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--tx-m);margin-bottom:22px}
+.comp-stats{
+  background:rgba(255,255,255,.72);backdrop-filter:blur(10px);
+  border-radius:20px;padding:18px 22px;
+  width:100%;max-width:300px;margin-bottom:20px;
+  border:1px solid rgba(93,196,168,.2);
+}
+.comp-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;border-bottom:1px solid rgba(93,196,168,.1);
+}
+.comp-row:last-child{border:none}
+.comp-lbl{font-size:13px;color:var(--tx-m)}
+.comp-val{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--tx)}
+
+.love-note{
+  background:linear-gradient(135deg,#FFF8F0,#FFF0F8);
+  border:1.5px solid rgba(196,117,74,.2);
+  border-radius:18px;padding:18px 22px;
+  max-width:300px;margin-bottom:22px;
+}
+.love-note-ic{font-size:28px;margin-bottom:8px}
+.love-note-tx{
+  font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;
+  color:var(--tx-m);line-height:1.65;
+}
+.comp-acts{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:260px}
+
+/* ── SPARKS / CONFETTI ────────────────────── */
+#sparks{position:fixed;inset:0;pointer-events:none;z-index:500;overflow:hidden}
+.sp{
+  position:absolute;border-radius:50%;pointer-events:none;
+  animation:sp-b .7s ease-out forwards;
+}
+@keyframes sp-b{
+  0%{transform:translate(0,0) scale(1);opacity:1}
+  100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}
+}
+.confp{
+  position:absolute;
+  animation:cf-f var(--d) ease-in var(--dl) forwards;
+}
+@keyframes cf-f{
+  0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* ── TOAST ────────────────────────────────── */
+#toast{
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
+  z-index:600;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  width:min(300px,90vw);
+}
+.toast-item{
+  background:rgba(255,253,249,.97);backdrop-filter:blur(12px);
+  border:1px solid rgba(93,196,168,.3);border-radius:24px;
+  padding:10px 18px;text-align:center;box-shadow:var(--sd2);
+  animation:ti-in .4s cubic-bezier(.34,1.56,.64,1),ti-out .35s ease 2.8s forwards;
+}
+.toast-em{font-size:16px;margin-bottom:2px}
+.toast-tx{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:var(--tx)}
+@keyframes ti-in{from{opacity:0;transform:scale(.8) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes ti-out{from{opacity:1}to{opacity:0;transform:scale(.9) translateY(-8px)}}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ====== WELCOME ====== -->
+<div id="sw" class="sc on">
+  <div class="sw-flowers" id="swf"></div>
+  <div class="sw-content">
+    <p class="eyebrow">✦ Un juego de recuerdos ✦</p>
+    <h1 class="sw-title">Rompe<em>cabezas</em></h1>
+    <p class="sw-sub">de fotos especiales 🌸</p>
+    <div class="sw-divider"></div>
+    <p class="sw-desc">
+      Elige una de las fotos especiales,<br>
+      escoge qué tan difícil quieres que sea<br>
+      y <strong>arma el rompecabezas</strong> pieza por pieza.
+    </p>
+    <button class="btn-p" onclick="showSc('sph')">🧩 Elegir foto</button>
+    <a href="index.html" class="btn-s">← Menú principal</a>
+  </div>
+</div>
+
+<!-- ====== PHOTO SELECTION ====== -->
+<div id="sph" class="sc">
+  <div class="hdr">
+    <button class="btn-back" onclick="showSc('sw')">←</button>
+    <span class="hdr-title">🌸 Elige una foto</span>
+  </div>
+  <div class="scroll-body">
+    <div class="photo-grid" id="photo-grid"></div>
+  </div>
+</div>
+
+<!-- ====== DIFFICULTY SELECTION ====== -->
+<div id="sdif" class="sc">
+  <div class="hdr">
+    <button class="btn-back" onclick="showSc('sph')">←</button>
+    <span class="hdr-title">🎯 Dificultad</span>
+  </div>
+  <div class="diff-body">
+    <div class="diff-preview">
+      <div id="diff-preview-img" class="diff-preview-ph">🌸</div>
+    </div>
+    <p class="section-ttl">¿Cuántas piezas?</p>
+    <div class="diff-presets" id="diff-presets">
+      <div class="diff-preset sel" data-rows="3" data-cols="3" onclick="selectPreset(this)">
+        <div class="dp-grid">⬛⬛⬛</div>
+        <div class="dp-name">Suave</div>
+        <div class="dp-sub">3 × 3 · 9 piezas</div>
+      </div>
+      <div class="diff-preset" data-rows="4" data-cols="4" onclick="selectPreset(this)">
+        <div class="dp-grid">⬛⬛⬛⬛</div>
+        <div class="dp-name">Normal</div>
+        <div class="dp-sub">4 × 4 · 16 piezas</div>
+      </div>
+      <div class="diff-preset" data-rows="5" data-cols="5" onclick="selectPreset(this)">
+        <div class="dp-grid">⬛⬛⬛⬛⬛</div>
+        <div class="dp-name">Difícil</div>
+        <div class="dp-sub">5 × 5 · 25 piezas</div>
+      </div>
+      <div class="diff-preset" data-rows="6" data-cols="6" onclick="selectPreset(this)">
+        <div class="dp-grid">🔴🔴🔴🔴🔴🔴</div>
+        <div class="dp-name">Experto</div>
+        <div class="dp-sub">6 × 6 · 36 piezas</div>
+      </div>
+    </div>
+    <div class="custom-row">
+      <div class="custom-row-title">✦ PERSONALIZAR</div>
+      <div class="custom-inputs">
+        <div class="custom-field">
+          <label>FILAS</label>
+          <input type="number" id="inp-rows" min="2" max="10" value="3" oninput="customChanged()">
+        </div>
+        <div class="custom-field">
+          <label>COLUMNAS</label>
+          <input type="number" id="inp-cols" min="2" max="10" value="3" oninput="customChanged()">
+        </div>
+      </div>
+    </div>
+    <button class="btn-p" style="width:100%" onclick="startPuzzle()">🧩 ¡Jugar!</button>
+  </div>
+</div>
+
+<!-- ====== GAME ====== -->
+<div id="sg" class="sc">
+  <div class="game-hdr">
+    <button class="btn-back" onclick="exitGame()">←</button>
+    <div class="game-hdr-stat">
+      <span class="game-hdr-lbl">Movimientos</span>
+      <span class="game-hdr-val" id="hdr-moves">0</span>
+    </div>
+    <div class="game-hdr-sep"></div>
+    <div class="game-hdr-stat">
+      <span class="game-hdr-lbl">Tiempo</span>
+      <span class="game-hdr-val" id="hdr-time">00:00</span>
+    </div>
+    <div class="game-hdr-sep"></div>
+    <div class="game-hdr-stat">
+      <span class="game-hdr-lbl">Piezas</span>
+      <span class="game-hdr-val" id="hdr-pcs">0/0</span>
+    </div>
+  </div>
+  <div class="sel-hint" id="sel-hint">Toca una pieza para seleccionarla</div>
+  <div class="puzzle-area">
+    <div class="puzzle-grid" id="puzzle-grid"></div>
+  </div>
+  <div class="game-actions">
+    <button class="btn-g btn-g-sh" onclick="shufflePuzzle()">↺ Mezclar</button>
+    <button class="btn-g btn-g-ex" onclick="exitGame()">✕ Salir</button>
+    <button class="btn-g btn-g-ok" onclick="showSolveHint()">💡 Pista</button>
+  </div>
+</div>
+
+<!-- ====== COMPLETION ====== -->
+<div id="scomp" class="sc">
+  <div class="comp-icon">🎉</div>
+  <h2 class="comp-title">¡Lo armaste, Britney!</h2>
+  <p class="comp-sub" id="comp-sub">Rompecabezas completado</p>
+  <div class="comp-stats">
+    <div class="comp-row"><span class="comp-lbl">Movimientos</span><span class="comp-val" id="comp-moves">0</span></div>
+    <div class="comp-row"><span class="comp-lbl">Tiempo</span><span class="comp-val" id="comp-time">00:00</span></div>
+    <div class="comp-row"><span class="comp-lbl">Dificultad</span><span class="comp-val" id="comp-diff">3×3</span></div>
+  </div>
+  <div class="love-note">
+    <div class="love-note-ic">💌</div>
+    <p class="love-note-tx" id="comp-msg"></p>
+  </div>
+  <div class="comp-acts">
+    <button class="btn-p" onclick="replayPuzzle()">↺ Otra vez</button>
+    <button class="btn-s" onclick="showSc('sph')">🌸 Otra foto</button>
+    <a href="index.html" class="btn-s">← Menú principal</a>
+  </div>
+</div>
+
+</div><!-- #app -->
+<div id="sparks"></div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+/* ── FOTOS disponibles en photosab ───────────────────────────
+   Lista de todas las fotos de la carpeta photosab/.
+   Para agregar más: { path: 'photosab/NOMBRE.jpeg', label: 'Etiqueta' }
+   Las fotos que no carguen muestran un marcador decorativo.
+   ─────────────────────────────────────────────────────────── */
+const PHOTOS = [
+  { path: 'photosab/1.jpeg',  label: 'Recuerdo 1'  },
+  { path: 'photosab/2.jpeg',  label: 'Recuerdo 2'  },
+  { path: 'photosab/3.jpeg',  label: 'Recuerdo 3'  },
+  { path: 'photosab/4.jpeg',  label: 'Recuerdo 4'  },
+  { path: 'photosab/5.jpeg',  label: 'Recuerdo 5'  },
+  { path: 'photosab/6.jpeg',  label: 'Recuerdo 6'  },
+  { path: 'photosab/7.jpeg',  label: 'Recuerdo 7'  },
+  { path: 'photosab/8.jpeg',  label: 'Recuerdo 8'  },
+  { path: 'photosab/9.jpeg',  label: 'Recuerdo 9'  },
+  { path: 'photosab/10.jpeg', label: 'Recuerdo 10' },
+  { path: 'photosab/11.jpeg', label: 'Recuerdo 11' },
+  { path: 'photosab/12.jpeg', label: 'Recuerdo 12' },
+  { path: 'photosab/13.jpeg', label: 'Recuerdo 13' },
+  { path: 'photosab/14.jpeg', label: 'Recuerdo 14' },
+  { path: 'photosab/15.jpeg', label: 'Recuerdo 15' },
+  { path: 'photosab/16.jpeg', label: 'Recuerdo 16' },
+  // Para agregar más: { path: 'photosab/17.jpeg', label: 'Recuerdo 17' },
+];
+
+const LOVE_MSGS = [
+  'Pieza por pieza, así te fui conociendo, y cada parte de ti es preciosa.',
+  'Como este rompecabezas, todo encaja perfecto contigo, Britney. 💚',
+  'Tu paciencia y tu sonrisa son mi parte favorita de todo.',
+  'Eres como un cuadro hermoso: cada detalle tuyo tiene su lugar.',
+  'Dios te hizo con cuidado, Britney. Y yo puedo verlo en cada cosa que eres.',
+  'Completaste el rompecabezas, pero tú ya completaste algo en mi corazón.',
+];
+
+/* ── STATE ─────────────────────────────────────────────────── */
+let S = {
+  photoIdx: 0,
+  rows: 3, cols: 3,
+  arrangement: [],   // arrangement[gridPos] = pieceId (where pieceId = correct pos)
+  selected: -1,
+  moves: 0,
+  timerVal: 0,
+  timerIv: null,
+  startTime: null,
+  total: 9,
+};
+
+/* ── SCREEN MANAGER ─────────────────────────────────────────── */
+function showSc(id) {
+  document.querySelectorAll('.sc').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+/* ── INIT ───────────────────────────────────────────────────── */
+function init() {
+  renderFlowers();
+  renderPhotoGrid();
+}
+
+/* ── FLOWERS (same SVG style as project) ────────────────────── */
+function sunflower(sz){
+  const p=[0,45,90,135,180,225,270,315].map(d=>`<ellipse cx="30" cy="11" rx="4.5" ry="12" fill="#F4C842" transform="rotate(${d},30,30)"/>`).join('');
+  return`<svg width="${sz}" height="${sz}" viewBox="0 0 60 60">${p}<circle cx="30" cy="30" r="11" fill="#8B5530"/></svg>`;
+}
+function rose(sz){
+  const w=Math.round(sz*.7);
+  return`<svg width="${w}" height="${sz}" viewBox="0 0 42 70"><line x1="21" y1="44" x2="21" y2="68" stroke="#5A8C6A" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="21" cy="30" rx="13" ry="9" fill="#E8909A" opacity=".85"/><ellipse cx="21" cy="27" rx="9" ry="7" fill="#D4688A"/><circle cx="21" cy="23" r="3.5" fill="#A03565"/></svg>`;
+}
+function tulip(sz){
+  const w=Math.round(sz*.65);
+  return`<svg width="${w}" height="${sz}" viewBox="0 0 42 80"><line x1="21" y1="55" x2="21" y2="76" stroke="#5A8C6A" stroke-width="2.5" stroke-linecap="round"/><path d="M13,36 Q10,20 21,18 Q32,20 29,36 Q27,51 21,53 Q15,51 13,36Z" fill="#C4754A"/></svg>`;
+}
+function renderFlowers(){
+  const el=document.getElementById('swf');
+  if(!el)return;
+  el.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:10px">${[sunflower(50),rose(60),tulip(66),rose(52),tulip(58),sunflower(44)].join('')}</div>`;
+}
+
+/* ── PHOTO GRID ─────────────────────────────────────────────── */
+function renderPhotoGrid() {
+  const grid = document.getElementById('photo-grid');
+  grid.innerHTML = '';
+
+  PHOTOS.forEach((ph, i) => {
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    card.onclick = () => selectPhoto(i);
+
+    const img = new Image();
+    img.onload = () => {
+      card.innerHTML = '';
+      card.appendChild(img);
+      const lbl = document.createElement('div');
+      lbl.className = 'photo-label';
+      lbl.textContent = ph.label;
+      card.appendChild(lbl);
+    };
+    img.onerror = () => {
+      card.innerHTML = `<div class="photo-placeholder"><span>🌸</span><p>${ph.label}</p></div>`;
+    };
+    img.className = '';
+    img.style.cssText = 'width:100%;aspect-ratio:1;object-fit:cover;display:block';
+    img.alt = ph.label;
+
+    // Placeholder while loading
+    card.innerHTML = `<div class="photo-placeholder"><span>⏳</span><p>Cargando...</p></div>`;
+    grid.appendChild(card);
+    img.src = ph.path;
+  });
+}
+
+function selectPhoto(idx) {
+  S.photoIdx = idx;
+  // Update difficulty preview
+  const previewEl = document.getElementById('diff-preview-img');
+  const img = new Image();
+  img.onload = () => {
+    previewEl.innerHTML = '';
+    img.style.cssText = 'width:100%;aspect-ratio:1;object-fit:cover;display:block';
+    previewEl.appendChild(img);
+  };
+  img.onerror = () => { previewEl.innerHTML = '🌸'; };
+  img.src = PHOTOS[idx].path;
+
+  showSc('sdif');
+}
+
+/* ── DIFFICULTY SELECTION ─────────────────────────────────────  */
+function selectPreset(el) {
+  document.querySelectorAll('.diff-preset').forEach(d => d.classList.remove('sel'));
+  el.classList.add('sel');
+  const rows = parseInt(el.dataset.rows);
+  const cols = parseInt(el.dataset.cols);
+  document.getElementById('inp-rows').value = rows;
+  document.getElementById('inp-cols').value = cols;
+}
+
+function customChanged() {
+  document.querySelectorAll('.diff-preset').forEach(d => d.classList.remove('sel'));
+}
+
+/* ── START PUZZLE ─────────────────────────────────────────────── */
+function startPuzzle() {
+  const rows = Math.max(2, Math.min(10, parseInt(document.getElementById('inp-rows').value) || 3));
+  const cols = Math.max(2, Math.min(10, parseInt(document.getElementById('inp-cols').value) || 3));
+
+  S.rows = rows;
+  S.cols = cols;
+  S.moves = 0;
+  S.selected = -1;
+  S.timerVal = 0;
+  S.total = rows * cols;
+  clearInterval(S.timerIv);
+
+  buildPuzzle();
+  showSc('sg');
+
+  // Start timer
+  S.timerIv = setInterval(() => {
+    S.timerVal++;
+    document.getElementById('hdr-time').textContent = fmtTime(S.timerVal);
+  }, 1000);
+  updateHUD();
+  document.getElementById('sel-hint').textContent = 'Toca una pieza para seleccionarla';
+}
+
+/* ── BUILD PUZZLE ─────────────────────────────────────────────── */
+function buildPuzzle() {
+  const grid = document.getElementById('puzzle-grid');
+  const { rows, cols } = S;
+
+  // Configure grid CSS
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  grid.style.gridTemplateRows    = `repeat(${rows}, 1fr)`;
+
+  // Shuffled arrangement: arrangement[gridPos] = correctPieceId
+  S.arrangement = Array.from({ length: rows * cols }, (_, i) => i);
+  shuffleArr(S.arrangement);
+
+  renderPuzzle();
+}
+
+function renderPuzzle() {
+  const grid = document.getElementById('puzzle-grid');
+  grid.innerHTML = '';
+  const { rows, cols, arrangement } = S;
+  const photoPath = PHOTOS[S.photoIdx].path;
+
+  arrangement.forEach((pieceId, gridPos) => {
+    const correctRow = Math.floor(pieceId / cols);
+    const correctCol = pieceId % cols;
+
+    const piece = document.createElement('div');
+    piece.className = 'piece';
+    piece.dataset.gridPos = gridPos;
+    piece.dataset.pieceId = pieceId;
+
+    // Position background to show the correct slice of the image
+    piece.style.backgroundImage = `url('${photoPath}')`;
+    piece.style.backgroundSize  = `${cols * 100}% ${rows * 100}%`;
+    const bx = cols > 1 ? (correctCol / (cols - 1)) * 100 : 0;
+    const by = rows > 1 ? (correctRow / (rows - 1)) * 100 : 0;
+    piece.style.backgroundPosition = `${bx}% ${by}%`;
+
+    // Fallback background color if image fails
+    piece.style.backgroundColor = pieceColors[pieceId % pieceColors.length];
+
+    piece.addEventListener('click',  () => tapPiece(gridPos));
+    piece.addEventListener('touchend', e => { e.preventDefault(); tapPiece(gridPos); }, { passive: false });
+
+    grid.appendChild(piece);
+  });
+
+  updateCorrectCount();
+}
+
+const pieceColors = [
+  '#E0F5EF','#FAE8DC','#FDF6EE','#EDD89A','#D8F5EC',
+  '#F0E8F8','#FFF8E0','#E8F0FF','#FFE8F0','#E8FFE8'
+];
+
+/* ── PUZZLE INTERACTION ───────────────────────────────────────── */
+function tapPiece(gridPos) {
+  if (S.selected === -1) {
+    // First tap: select
+    S.selected = gridPos;
+    highlightPiece(gridPos, true);
+    document.getElementById('sel-hint').textContent = '✦ Toca otra pieza para intercambiar';
+  } else if (S.selected === gridPos) {
+    // Tap same: deselect
+    highlightPiece(gridPos, false);
+    S.selected = -1;
+    document.getElementById('sel-hint').textContent = 'Toca una pieza para seleccionarla';
+  } else {
+    // Second tap: swap
+    swapPieces(S.selected, gridPos);
+    highlightPiece(S.selected, false);
+    S.selected = -1;
+    S.moves++;
+    updateHUD();
+    document.getElementById('sel-hint').textContent = 'Toca una pieza para seleccionarla';
+
+    // Check completion
+    if (isPuzzleSolved()) {
+      setTimeout(onComplete, 400);
+    }
+  }
+}
+
+function highlightPiece(gridPos, on) {
+  const pieces = document.getElementById('puzzle-grid').children;
+  if (pieces[gridPos]) {
+    pieces[gridPos].classList.toggle('selected', on);
+  }
+}
+
+function swapPieces(posA, posB) {
+  // Swap in arrangement array
+  [S.arrangement[posA], S.arrangement[posB]] = [S.arrangement[posB], S.arrangement[posA]];
+
+  const grid = document.getElementById('puzzle-grid');
+  const pieceA = grid.children[posA];
+  const pieceB = grid.children[posB];
+
+  // Swap backgrounds
+  const tmpImg = pieceA.style.backgroundImage;
+  const tmpSz  = pieceA.style.backgroundSize;
+  const tmpPos = pieceA.style.backgroundPosition;
+  const tmpBg  = pieceA.style.backgroundColor;
+
+  pieceA.style.backgroundImage    = pieceB.style.backgroundImage;
+  pieceA.style.backgroundSize     = pieceB.style.backgroundSize;
+  pieceA.style.backgroundPosition = pieceB.style.backgroundPosition;
+  pieceA.style.backgroundColor    = pieceB.style.backgroundColor;
+  pieceA.dataset.pieceId          = pieceB.dataset.pieceId;
+
+  pieceB.style.backgroundImage    = tmpImg;
+  pieceB.style.backgroundSize     = tmpSz;
+  pieceB.style.backgroundPosition = tmpPos;
+  pieceB.style.backgroundColor    = tmpBg;
+  pieceB.dataset.pieceId          = String(S.arrangement[posB]);
+
+  // Animate
+  [pieceA, pieceB].forEach(p => {
+    p.classList.add('solved-anim');
+    setTimeout(() => p.classList.remove('solved-anim'), 360);
+  });
+
+  updateCorrectCount();
+}
+
+function isPuzzleSolved() {
+  return S.arrangement.every((pieceId, pos) => pieceId === pos);
+}
+
+function updateCorrectCount() {
+  const correct = S.arrangement.filter((id, pos) => id === pos).length;
+  document.getElementById('hdr-pcs').textContent = `${correct}/${S.total}`;
+  // Highlight correct pieces
+  const pieces = document.getElementById('puzzle-grid').children;
+  S.arrangement.forEach((pieceId, pos) => {
+    if (pieces[pos]) pieces[pos].classList.toggle('correct', pieceId === pos);
+  });
+}
+
+/* ── SHUFFLE ────────────────────────────────────────────────── */
+function shuffleArr(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function shufflePuzzle() {
+  S.selected = -1;
+  S.moves = 0;
+  shuffleArr(S.arrangement);
+  renderPuzzle();
+  updateHUD();
+  document.getElementById('sel-hint').textContent = 'Toca una pieza para seleccionarla';
+  showToast('¡Mezclado! 🌀', '🌸');
+}
+
+/* ── HINT ────────────────────────────────────────────────────── */
+function showSolveHint() {
+  // Find first wrong piece and highlight it briefly
+  const wrongPos = S.arrangement.findIndex((id, pos) => id !== pos);
+  if (wrongPos < 0) return;
+  const pieces = document.getElementById('puzzle-grid').children;
+  const el = pieces[wrongPos];
+  if (!el) return;
+  el.classList.add('selected');
+  S.selected = wrongPos;
+  document.getElementById('sel-hint').textContent = '💡 Esta pieza está en el lugar equivocado';
+  showToast('¡Hay una pista! Toca otra pieza para intercambiar.', '💡');
+}
+
+/* ── COMPLETION ──────────────────────────────────────────────── */
+function onComplete() {
+  clearInterval(S.timerIv);
+  celebrate();
+  document.getElementById('comp-moves').textContent = S.moves;
+  document.getElementById('comp-time').textContent  = fmtTime(S.timerVal);
+  document.getElementById('comp-diff').textContent  = `${S.rows} × ${S.cols}`;
+  document.getElementById('comp-sub').textContent   = PHOTOS[S.photoIdx].label;
+  document.getElementById('comp-msg').textContent   = LOVE_MSGS[Math.floor(Math.random() * LOVE_MSGS.length)];
+  showSc('scomp');
+}
+
+function replayPuzzle() {
+  S.moves = 0;
+  S.timerVal = 0;
+  clearInterval(S.timerIv);
+  S.timerIv = setInterval(() => {
+    S.timerVal++;
+    document.getElementById('hdr-time').textContent = fmtTime(S.timerVal);
+  }, 1000);
+  S.arrangement = Array.from({ length: S.rows * S.cols }, (_, i) => i);
+  shuffleArr(S.arrangement);
+  S.selected = -1;
+  renderPuzzle();
+  updateHUD();
+  showSc('sg');
+}
+
+/* ── EXIT ────────────────────────────────────────────────────── */
+function exitGame() {
+  clearInterval(S.timerIv);
+  S.selected = -1;
+  showSc('sph');
+}
+
+/* ── HUD ────────────────────────────────────────────────────── */
+function updateHUD() {
+  document.getElementById('hdr-moves').textContent = S.moves;
+  document.getElementById('hdr-time').textContent  = fmtTime(S.timerVal);
+}
+
+function fmtTime(v) {
+  const m = Math.floor(v / 60).toString().padStart(2, '0');
+  const s = (v % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+/* ── EFFECTS ─────────────────────────────────────────────────── */
+const SPARK_COLS = ['#5DC4A8','#E8A070','#D4AF6A','#C897A0','#F4D882'];
+
+function celebrate() {
+  const layer = document.getElementById('sparks');
+  const cols  = ['#5DC4A8','#E8A070','#D4AF6A','#C897A0','#F4D882','#A8D5C5','#EDD89A'];
+  for (let i = 0; i < 80; i++) {
+    const d = document.createElement('div');
+    d.className = 'confp';
+    const sz = 5 + Math.random() * 10;
+    Object.assign(d.style, {
+      width: sz + 'px', height: sz + 'px',
+      left: Math.random() * 100 + 'vw', top: '-20px',
+      background: cols[Math.floor(Math.random() * cols.length)],
+      borderRadius: Math.random() > .5 ? '50%' : '3px',
+      '--d': (1.5 + Math.random() * 2.5) + 's',
+      '--dl': (Math.random() * .8) + 's',
+    });
+    layer.appendChild(d);
+    setTimeout(() => d.remove(), 4000);
+  }
+}
+
+function showToast(tx, em) {
+  const wrap = document.getElementById('toast');
+  const el   = document.createElement('div');
+  el.className = 'toast-item';
+  el.innerHTML = `<div class="toast-em">${em}</div><div class="toast-tx">${tx}</div>`;
+  wrap.appendChild(el);
+  setTimeout(() => el.remove(), 3300);
+}
+
+/* ── RUN ────────────────────────────────────────────────────── */
+init();
+</script>
+</body>
+</html>

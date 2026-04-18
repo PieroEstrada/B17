@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Arcoíris de Corazones 🌈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{
+  width:100%;height:100%;overflow:hidden;
+  background:#130a1a;touch-action:none;
+  font-family:'Nunito',sans-serif;-webkit-font-smoothing:antialiased;
+}
+
+/* ─── CANVAS — full viewport, always ────────────── */
+#gc{display:block;position:fixed;inset:0;width:100%;height:100%}
+
+/* ─── SCREENS — fixed, full viewport ────────────── */
+.rsc{position:fixed;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .38s ease;z-index:10}
+.rsc.on{opacity:1;pointer-events:all}
+
+/* ─── WELCOME ───────────────────────────────────── */
+#sw{background:radial-gradient(ellipse at 50% 40%, #2a0e28 0%, #130a1a 70%)}
+.sw-flowers{font-size:clamp(2rem,5vw,3rem);letter-spacing:10px;margin-bottom:18px;
+  animation:sw-float 4s ease-in-out infinite}
+@keyframes sw-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.sw-title{font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,6vw,3.6rem);font-weight:600;color:#fff;
+  text-align:center;line-height:1.08;margin-bottom:8px}
+.sw-title em{color:#FFB8DE;font-style:italic;
+  text-shadow:0 0 28px rgba(255,130,200,.4)}
+.sw-sub{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(.85rem,2.2vw,1.15rem);color:rgba(255,200,235,.62);
+  text-align:center;margin-bottom:26px;max-width:340px;line-height:1.55}
+.sw-hint{font-size:.7rem;letter-spacing:3.5px;text-transform:uppercase;
+  color:rgba(255,180,220,.35);margin-bottom:32px;text-align:center}
+.btn-main{background:linear-gradient(135deg,#E8909A,#B83870);
+  color:#fff;border:none;border-radius:40px;padding:16px 54px;
+  font-family:'Nunito',sans-serif;font-size:clamp(.95rem,2.5vw,1.1rem);
+  font-weight:800;letter-spacing:.3px;cursor:pointer;position:relative;
+  overflow:hidden;box-shadow:0 8px 30px rgba(184,56,112,.45);
+  transition:transform .15s,box-shadow .15s}
+.btn-main::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.22) 0%,transparent 55%);
+  pointer-events:none}
+.btn-main:active{transform:scale(.97)}
+
+/* ─── HUD ───────────────────────────────────────── */
+#hud{position:fixed;top:0;left:0;right:0;z-index:20;
+  display:flex;align-items:center;gap:10px;padding:7px 14px 5px;
+  background:rgba(14,6,20,.78);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,170,210,.1);
+  opacity:0;pointer-events:none;transition:opacity .3s}
+#hud.on{opacity:1;pointer-events:all}
+.hstat{display:flex;flex-direction:column;align-items:center;min-width:52px}
+.hlbl{font-size:7.5px;text-transform:uppercase;letter-spacing:1.8px;
+  color:rgba(255,190,230,.32)}
+.hval{font-family:'Cormorant Garamond',serif;
+  font-size:1.45rem;font-weight:500;color:#fff;line-height:1}
+.hval.gold{color:#FFD166}
+.hprog{flex:1;height:7px;background:rgba(255,255,255,.08);
+  border-radius:4px;overflow:hidden;position:relative}
+.hpfill{height:100%;width:0%;transition:width .3s ease;
+  background:linear-gradient(to right,
+    #FF6B9D,#FF8C42,#FFD166,#6BCF7F,#61A5F8,#C08FE0)}
+.hcombo{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:.85rem;color:rgba(255,220,240,.5);white-space:nowrap}
+.btn-hud{background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,170,210,.18);
+  border-radius:8px;padding:5px 9px;
+  color:rgba(255,190,230,.65);font-size:13px;
+  cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700}
+
+/* ─── PAUSE OVERLAY ─────────────────────────────── */
+#pov{position:fixed;inset:0;z-index:50;
+  background:rgba(12,4,18,.88);backdrop-filter:blur(12px);
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:16px;
+  opacity:0;pointer-events:none;transition:opacity .25s}
+#pov.on{opacity:1;pointer-events:all}
+.pttl{font-family:'Cormorant Garamond',serif;font-size:2.4rem;
+  font-weight:600;color:#fff}
+.pbtn{background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,170,210,.22);border-radius:18px;
+  padding:12px 32px;color:rgba(255,195,230,.8);
+  font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;
+  cursor:pointer;min-width:200px;text-align:center;transition:all .15s}
+.pbtn.main{background:linear-gradient(135deg,#E8909A,#B83870);
+  color:#fff;border:none;box-shadow:0 6px 20px rgba(184,56,112,.38)}
+.pbtn:active{transform:scale(.97)}
+
+/* ─── RESULT ─────────────────────────────────────── */
+#sr{background:radial-gradient(ellipse at 50% 40%,#2a0e28 0%,#130a1a 70%);gap:14px}
+.ric{font-size:3.5rem;animation:rbounce .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes rbounce{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.rttl{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,5vw,2.4rem);
+  font-weight:600;color:#fff;text-align:center}
+.rsc-score{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,7vw,3.2rem);
+  font-weight:500;color:#FFD166;
+  text-shadow:0 0 24px rgba(255,209,102,.35)}
+.rmsg{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(.9rem,2.3vw,1.1rem);color:rgba(255,195,230,.65);
+  text-align:center;max-width:300px;line-height:1.65}
+.rbtnrow{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:6px}
+
+/* ─── COMBO FLASH ───────────────────────────────── */
+#comboflash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  z-index:30;pointer-events:none;opacity:0;
+  font-family:'Cormorant Garamond',serif;font-weight:600;
+  color:#FFD166;text-align:center;
+  text-shadow:0 0 30px rgba(255,209,102,.6)}
+#comboflash.pop{animation:cfpop 1.1s ease forwards}
+@keyframes cfpop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}
+  18%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}
+  65%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-60%) scale(.9)}}
+</style>
+</head>
+<body>
+
+<!-- ──────── WELCOME ──────── -->
+<div id="sw" class="rsc on">
+  <div class="sw-flowers">🌹 🌸 🌷</div>
+  <h1 class="sw-title">Arcoíris de<br><em>Corazones</em></h1>
+  <p class="sw-sub">Un juego romántico hecho<br>especialmente para ti, Britney 💌</p>
+  <p class="sw-hint">✦ Arrastra para apuntar · Suelta para disparar<br>✦ Toca sin arrastrar para cambiar corazón</p>
+  <button class="btn-main" id="btnPlay">🌈 Comenzar</button>
+  <a href="index.html" style="margin-top:16px;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,180,220,.45);text-decoration:none;font-family:'Nunito',sans-serif;font-weight:700">← Menú principal</a>
+</div>
+
+<!-- ──────── HUD ──────── -->
+<div id="hud">
+  <div class="hstat">
+    <span class="hlbl">Puntos</span>
+    <span class="hval gold" id="hudScore">0</span>
+  </div>
+  <div class="hprog"><div class="hpfill" id="hudProg"></div></div>
+  <span class="hcombo" id="hudCombo"></span>
+  <button class="btn-hud" id="btnPause">⏸</button>
+</div>
+
+<!-- ──────── PAUSE ──────── -->
+<div id="pov">
+  <p class="pttl">⏸ Pausa</p>
+  <button class="pbtn main" id="btnResume">▶ Continuar</button>
+  <button class="pbtn" id="btnRestart">↺ Reiniciar</button>
+  <button class="pbtn" id="btnHome">🌸 Inicio</button>
+</div>
+
+<!-- ──────── RESULT ──────── -->
+<div id="sr" class="rsc">
+  <div class="ric" id="rIcon">💌</div>
+  <h2 class="rttl" id="rTitle">¡Hermoso, Britney!</h2>
+  <div class="rsc-score" id="rScore">0</div>
+  <p class="rmsg" id="rMsg"></p>
+  <div class="rbtnrow">
+    <button class="btn-main" id="btnRetry">↺ Jugar de nuevo</button>
+    <button class="pbtn" id="btnHome2" style="margin-top:4px">🌸 Inicio</button>
+  </div>
+</div>
+
+<!-- ──────── COMBO FLASH ──────── -->
+<div id="comboflash"></div>
+
+<!-- ──────── CANVAS ──────── -->
+<canvas id="gc"></canvas>
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════════════════════ */
+const HEART_R       = 13;    // heart radius (drawing)
+const HIT_R         = 15;    // collision radius
+const HEART_SPACING = 28;    // arc-length between heart centers
+const PROJ_SPEED    = 8.5;   // px per frame
+const CHAIN_LEN     = 44;    // total hearts in chain
+const BASE_SPEED    = 0.32;  // chain advance px/frame at start
+const MAX_SPEED     = 1.55;  // maximum chain speed
+const SPEED_RAMP    = 0.010; // speed increase per second
+const MATCH_MIN     = 3;
+const SWAP_PIX      = 22;    // max drag to count as a tap (swap)
+const TIP_DIST      = 30;    // px from rose center to projectile origin
+const REVERSE_TIME  = 0.85;  // seconds of chain reversal after match
+const REVERSE_SPEED = 0.38;  // reverse speed fraction
+
+/* ═══════════════════════════════════════════════════════
+   COLORS  (vibrant, dark-background-friendly)
+═══════════════════════════════════════════════════════ */
+const COLORS = [
+  { id:0, fill:'#FF6B9D', hi:'#FFB8D6', glow:'rgba(255,107,157,.55)', name:'Rosa'   },
+  { id:1, fill:'#FF8C42', hi:'#FFBA88', glow:'rgba(255,140,66,.52)',  name:'Coral'  },
+  { id:2, fill:'#FFD166', hi:'#FFE9A8', glow:'rgba(255,209,102,.55)', name:'Dorado' },
+  { id:3, fill:'#6BCF7F', hi:'#AAEAB6', glow:'rgba(107,207,127,.52)', name:'Menta'  },
+  { id:4, fill:'#61A5F8', hi:'#A8CCFF', glow:'rgba(97,165,248,.52)',  name:'Cielo'  },
+  { id:5, fill:'#C08FE0', hi:'#DBBEF5', glow:'rgba(192,143,224,.52)', name:'Lila'   },
+];
+const N_COLORS = COLORS.length;
+
+/* ═══════════════════════════════════════════════════════
+   PATH VARIANTS  (4 designs, one picked randomly per game)
+   All coordinates are fractions of the full viewport W × H.
+   Designed for LANDSCAPE — the road spans the full width.
+   Entry from off-screen right (rx > 1), doom at left edge.
+   Launcher is always placed off the track (below or beside it).
+═══════════════════════════════════════════════════════ */
+/* ── PATHS: Oval orbits around center — Zuma style ───────────
+   The launcher is always at the CENTER of the screen.
+   Each path is an oval that orbits the center, so the player
+   shoots outward in any direction to match the passing chain.
+   ─────────────────────────────────────────────────────────── */
+const ALL_PATHS = [
+
+  /* ── PATH A: Clockwise oval orbit ── */
+  {
+    wp: [
+      { rx: 1.10, ry: 0.44 },   // entry off-screen right
+      { rx: 0.86, ry: 0.44 },   // right
+      { rx: 0.79, ry: 0.22 },   // top-right
+      { rx: 0.50, ry: 0.13 },   // top
+      { rx: 0.21, ry: 0.22 },   // top-left
+      { rx: 0.14, ry: 0.44 },   // left
+      { rx: 0.21, ry: 0.66 },   // bottom-left
+      { rx: 0.50, ry: 0.75 },   // bottom
+      { rx: 0.79, ry: 0.66 },   // bottom-right
+      { rx: 1.10, ry: 0.44 },   // doom — off-screen right again
+    ],
+    launcher: { rx: 0.50, ry: 0.44 },
+  },
+
+  /* ── PATH B: Counter-clockwise oval ── */
+  {
+    wp: [
+      { rx: 1.10, ry: 0.46 },   // entry right
+      { rx: 0.84, ry: 0.68 },   // bottom-right
+      { rx: 0.50, ry: 0.78 },   // bottom
+      { rx: 0.16, ry: 0.68 },   // bottom-left
+      { rx: 0.12, ry: 0.46 },   // left
+      { rx: 0.16, ry: 0.24 },   // top-left
+      { rx: 0.50, ry: 0.14 },   // top
+      { rx: 0.84, ry: 0.24 },   // top-right
+      { rx: -0.10, ry: 0.46 },  // doom left
+    ],
+    launcher: { rx: 0.50, ry: 0.46 },
+  },
+
+  /* ── PATH C: Tall ellipse entry from top ── */
+  {
+    wp: [
+      { rx: 0.50, ry: -0.08 },  // entry from top
+      { rx: 0.82, ry: 0.18 },   // top-right
+      { rx: 0.88, ry: 0.46 },   // right
+      { rx: 0.82, ry: 0.72 },   // bottom-right
+      { rx: 0.50, ry: 0.80 },   // bottom
+      { rx: 0.18, ry: 0.72 },   // bottom-left
+      { rx: 0.12, ry: 0.46 },   // left
+      { rx: 0.18, ry: 0.20 },   // top-left
+      { rx: 0.50, ry: 1.08 },   // doom — off-screen bottom
+    ],
+    launcher: { rx: 0.50, ry: 0.46 },
+  },
+
+  /* ── PATH D: Figure-8 around center ── */
+  {
+    wp: [
+      { rx: 1.08, ry: 0.28 },   // entry top-right
+      { rx: 0.80, ry: 0.18 },
+      { rx: 0.60, ry: 0.44 },   // crosses center area (top loop)
+      { rx: 0.80, ry: 0.68 },
+      { rx: 0.50, ry: 0.78 },   // bottom
+      { rx: 0.20, ry: 0.68 },
+      { rx: 0.40, ry: 0.44 },   // crosses center area (bottom loop)
+      { rx: 0.20, ry: 0.20 },
+      { rx: -0.08, ry: 0.28 },  // doom left
+    ],
+    launcher: { rx: 0.50, ry: 0.44 },
+  },
+
+];
+
+/* Active path waypoints for current game — set in resetGame() */
+let WP_REL = ALL_PATHS[0].wp;
+
+/* ─── CANVAS ──────────────────────────────────────── */
+const canvas = document.getElementById('gc');
+const ctx    = canvas.getContext('2d');
+let   PATH   = null;
+
+/* Full viewport — the game IS the screen.
+   Designed for landscape; works in any orientation without restriction. */
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  buildPath();
+}
+
+/* Catmull-Rom spline interpolation */
+function catmullRom(p0, p1, p2, p3, t) {
+  const t2 = t*t, t3 = t2*t;
+  return {
+    x: .5*((2*p1.x)+(-p0.x+p2.x)*t+(2*p0.x-5*p1.x+4*p2.x-p3.x)*t2+(-p0.x+3*p1.x-3*p2.x+p3.x)*t3),
+    y: .5*((2*p1.y)+(-p0.y+p2.y)*t+(2*p0.y-5*p1.y+4*p2.y-p3.y)*t2+(-p0.y+3*p1.y-3*p2.y+p3.y)*t3),
+  };
+}
+
+function buildPath() {
+  const W = canvas.width, H = canvas.height;
+  const WP = WP_REL.map(p => ({ x: p.rx*W, y: p.ry*H }));
+  // Phantom start/end for Catmull-Rom
+  const pts = [WP[0], ...WP, WP[WP.length-1]];
+  const STEPS = 70;
+  const points = [];
+
+  for (let i = 1; i < pts.length-2; i++) {
+    for (let j = 0; j <= STEPS; j++) {
+      points.push(catmullRom(pts[i-1], pts[i], pts[i+1], pts[i+2], j/STEPS));
+    }
+  }
+
+  // Cumulative arc lengths
+  const cumLen = [0];
+  for (let i = 1; i < points.length; i++) {
+    const dx = points[i].x - points[i-1].x;
+    const dy = points[i].y - points[i-1].y;
+    cumLen.push(cumLen[i-1] + Math.sqrt(dx*dx + dy*dy));
+  }
+
+  PATH = { points, cumLen, totalLen: cumLen[cumLen.length-1], wp: WP };
+}
+
+/* Get {x, y, angle} at arc-length d along path */
+function posAtDist(d) {
+  const { points, cumLen, totalLen } = PATH;
+  d = Math.max(0, Math.min(totalLen, d));
+  let lo = 0, hi = cumLen.length - 1;
+  while (lo < hi-1) {
+    const mid = (lo+hi) >> 1;
+    if (cumLen[mid] <= d) lo = mid; else hi = mid;
+  }
+  const span = cumLen[hi] - cumLen[lo];
+  const t    = span < 1e-6 ? 0 : (d - cumLen[lo]) / span;
+  const p0 = points[lo], p1 = points[hi];
+  return {
+    x:     p0.x + (p1.x - p0.x) * t,
+    y:     p0.y + (p1.y - p0.y) * t,
+    angle: Math.atan2(p1.y - p0.y, p1.x - p0.x),
+  };
+}
+
+/* ═══════════════════════════════════════════════════════
+   GAME STATE
+═══════════════════════════════════════════════════════ */
+let G = {};
+
+function rndColor() { return Math.floor(Math.random() * N_COLORS); }
+
+/* Generate a chain with color grouping (2-5 per group) for reachable matches */
+function genChain() {
+  const arr = [];
+  let last = rndColor(), run = 1;
+  for (let i = 0; i < CHAIN_LEN; i++) {
+    const maxRun = 3 + Math.floor(Math.random()*3);  // groups of 2–5
+    if (run >= maxRun || (run >= 2 && Math.random() < 0.28)) {
+      let nc; do { nc = rndColor(); } while (nc === last && N_COLORS > 1);
+      last = nc; run = 1;
+    } else { run++; }
+    arr.push({ colorId: last, vis: false, x: 0, y: 0, angle: 0 });
+  }
+  return arr;
+}
+
+function resetGame() {
+  const W = canvas.width, H = canvas.height;
+
+  // Pick a random path variant for this game
+  const pathDef = ALL_PATHS[Math.floor(Math.random() * ALL_PATHS.length)];
+  WP_REL        = pathDef.wp;
+  buildPath(); // rebuild with new waypoints
+
+  // Launcher position from the chosen path definition
+  const lx = W * pathDef.launcher.rx;
+  const ly = H * pathDef.launcher.ry;
+
+  G = {
+    chain:         genChain(),
+    proj:          null,        // {colorId, x, y, vx, vy, active}
+    launcher: {
+      x:           lx,
+      y:           ly,
+      aimAngle:    -Math.PI/2,  // starts pointing up
+      curColor:    rndColor(),
+      nxtColor:    rndColor(),
+    },
+    score:         0,
+    combo:         0,
+    comboTimer:    0,
+    leadDist:      0,           // arc-dist of chain[0] (lead) from path start
+    chainSpeed:    BASE_SPEED,
+    revTimer:      0,           // chain reversal timer after match
+    running:       false,
+    paused:        false,
+    particles:     [],          // {x,y,vx,vy,life,maxLife,color,size,isHeart}
+    petals:        genPetals(W, H),
+    cleared:       0,           // hearts matched away
+    touchStart:    null,
+    aiming:        false,
+    aimX:          lx,
+    aimY:          ly - 90,
+    elapsed:       0,
+    lastTime:      null,
+    matchPending:  false,
+    pendingIdx:    -1,
+    pendingTimer:  0,
+  };
+}
+
+/* Pre-generate ambient floating petals */
+function genPetals(W, H) {
+  return Array.from({ length: 14 }, () => ({
+    x:   Math.random() * W,
+    y:   Math.random() * H,
+    vx:  (Math.random() - .5) * .25,
+    vy:  -.18 - Math.random() * .28,
+    sz:  3 + Math.random() * 4,
+    a:   .08 + Math.random() * .14,
+    hue: Math.random() * 60 + 320, // pinkish range
+  }));
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHAIN POSITION UPDATE
+═══════════════════════════════════════════════════════ */
+function updateChainPositions() {
+  for (let i = 0; i < G.chain.length; i++) {
+    const d = G.leadDist - i * HEART_SPACING;
+    if (d < -HEART_SPACING) {
+      G.chain[i].vis = false;
+    } else {
+      const pos = posAtDist(Math.max(0, d));
+      G.chain[i].x     = pos.x;
+      G.chain[i].y     = pos.y;
+      G.chain[i].angle = pos.angle;
+      G.chain[i].vis   = d >= -HEART_SPACING * .5;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   GAME LOOP
+═══════════════════════════════════════════════════════ */
+let rafId = null;
+
+function startLoop() {
+  if (rafId) cancelAnimationFrame(rafId);
+  G.lastTime = null;
+  rafId = requestAnimationFrame(gameLoop);
+}
+
+function gameLoop(ts) {
+  if (!G.running) return;
+  if (!G.lastTime) G.lastTime = ts;
+  const dt = Math.min((ts - G.lastTime) / 1000, .05);
+  G.lastTime = ts;
+
+  if (!G.paused) {
+    G.elapsed += dt;
+    G.chainSpeed = Math.min(BASE_SPEED + G.elapsed * SPEED_RAMP, MAX_SPEED);
+
+    // Chain movement (with reversal support)
+    if (G.revTimer > 0) {
+      G.revTimer -= dt;
+      G.leadDist -= G.chainSpeed * REVERSE_SPEED;
+      G.leadDist = Math.max(0, G.leadDist);
+    } else {
+      G.leadDist += G.chainSpeed;
+    }
+
+    // Game-over: lead heart past doom
+    if (G.leadDist > PATH.totalLen + HEART_R * 2) {
+      endGame(false); return;
+    }
+
+    // Win: all hearts cleared
+    if (G.chain.length === 0 && G.cleared >= CHAIN_LEN) {
+      endGame(true); return;
+    }
+
+    updateChainPositions();
+
+    // Projectile
+    if (G.proj && G.proj.active) {
+      G.proj.x += G.proj.vx * PROJ_SPEED;
+      G.proj.y += G.proj.vy * PROJ_SPEED;
+      checkBounds();
+      if (G.proj && G.proj.active) checkCollision();
+    }
+
+    // Pending cascade match
+    if (G.matchPending) {
+      G.pendingTimer -= dt;
+      if (G.pendingTimer <= 0) {
+        G.matchPending = false;
+        checkMatches(G.pendingIdx, false);
+      }
+    }
+
+    // Combo timer decay
+    if (G.combo > 0) { G.comboTimer -= dt; if (G.comboTimer < 0) G.combo = 0; }
+
+    // Ambient petals
+    updatePetals(dt);
+
+    // Particles
+    for (let i = G.particles.length-1; i >= 0; i--) {
+      const p = G.particles[i];
+      p.x += p.vx; p.y += p.vy; p.vy += .07;
+      p.life -= dt / p.maxLife;
+      if (p.life <= 0) G.particles.splice(i, 1);
+    }
+  }
+
+  render();
+  updateHUD();
+  rafId = requestAnimationFrame(gameLoop);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PHYSICS
+═══════════════════════════════════════════════════════ */
+function checkBounds() {
+  const { x, y } = G.proj;
+  if (x < -HIT_R*4 || x > canvas.width+HIT_R*4 ||
+      y < -HIT_R*4 || y > canvas.height+HIT_R*4) {
+    G.proj.active = false;
+  }
+}
+
+function checkCollision() {
+  const pr = G.proj;
+  const minDistSq = (HIT_R * 2) * (HIT_R * 2);
+  let bestSq = minDistSq, bestIdx = -1;
+
+  // Minimum distance from launcher before collision can register
+  const dFromLauncher = (pr.x - G.launcher.x)**2 + (pr.y - G.launcher.y)**2;
+  if (dFromLauncher < (TIP_DIST + HIT_R) * (TIP_DIST + HIT_R)) return;
+
+  for (let i = 0; i < G.chain.length; i++) {
+    const h = G.chain[i];
+    if (!h.vis) continue;
+    const dx = pr.x - h.x, dy = pr.y - h.y;
+    const dsq = dx*dx + dy*dy;
+    if (dsq < bestSq) { bestSq = dsq; bestIdx = i; }
+  }
+
+  if (bestIdx < 0) return;
+
+  const h = G.chain[bestIdx];
+  // Determine insert side: dot of (proj - heart) with chain direction
+  const dot = (pr.x-h.x)*Math.cos(h.angle) + (pr.y-h.y)*Math.sin(h.angle);
+  const insertIdx = dot < 0 ? bestIdx + 1 : bestIdx;
+
+  insertHeart(clampIdx(insertIdx), pr.colorId, pr.x, pr.y);
+  pr.active = false;
+}
+
+function clampIdx(i) { return Math.max(0, Math.min(i, G.chain.length)); }
+
+/* ═══════════════════════════════════════════════════════
+   MATCH & CHAIN
+═══════════════════════════════════════════════════════ */
+function insertHeart(idx, colorId, px, py) {
+  G.chain.splice(idx, 0, {
+    colorId, vis: true,
+    x: px, y: py, angle: 0,
+  });
+  updateChainPositions();
+  checkMatches(Math.max(0, Math.min(idx, G.chain.length-1)), true);
+}
+
+function checkMatches(idx, immediate) {
+  if (G.chain.length === 0) return;
+  idx = Math.max(0, Math.min(idx, G.chain.length-1));
+  const color = G.chain[idx].colorId;
+
+  let lo = idx, hi = idx;
+  while (lo > 0                    && G.chain[lo-1].colorId === color) lo--;
+  while (hi < G.chain.length - 1  && G.chain[hi+1].colorId === color) hi++;
+
+  const run = hi - lo + 1;
+  if (run < MATCH_MIN) return;
+
+  // Centroid for particles
+  let cx = 0, cy = 0;
+  for (let i = lo; i <= hi; i++) { cx += G.chain[i].x; cy += G.chain[i].y; }
+  cx /= run; cy /= run;
+
+  // Score
+  const pts = run * 10 * Math.max(1, G.combo);
+  G.score  += pts;
+  G.combo++;
+  G.comboTimer = 4;
+  G.cleared   += run;
+
+  // Remove
+  G.chain.splice(lo, run);
+  updateChainPositions();
+
+  // Chain reversal (Zuma mechanic)
+  G.revTimer = REVERSE_TIME;
+
+  // Particles
+  spawnMatchParticles(cx, cy, COLORS[color], run);
+
+  // Combo flash
+  if (G.combo >= 2) showComboFlash(G.combo, run);
+
+  // Cascade check
+  if (G.chain.length > 0 && lo > 0 && lo <= G.chain.length) {
+    G.matchPending = true;
+    G.pendingIdx   = Math.min(lo, G.chain.length-1);
+    G.pendingTimer = .28;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROJECTILE & LAUNCHER
+═══════════════════════════════════════════════════════ */
+function fire() {
+  if (G.proj && G.proj.active) return;
+  const ang  = G.launcher.aimAngle;
+  const color = G.launcher.curColor;
+  // Advance to next color immediately (so HUD updates)
+  G.launcher.curColor = G.launcher.nxtColor;
+  G.launcher.nxtColor = rndColor();
+
+  G.proj = {
+    colorId: color,
+    x: G.launcher.x + Math.cos(ang) * TIP_DIST,
+    y: G.launcher.y + Math.sin(ang) * TIP_DIST,
+    vx: Math.cos(ang),
+    vy: Math.sin(ang),
+    active: true,
+  };
+}
+
+function swapColors() {
+  const tmp = G.launcher.curColor;
+  G.launcher.curColor = G.launcher.nxtColor;
+  G.launcher.nxtColor = tmp;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PARTICLES
+═══════════════════════════════════════════════════════ */
+function spawnMatchParticles(cx, cy, col, count) {
+  const n = Math.min(count * 6, 32);
+  for (let i = 0; i < n; i++) {
+    const ang = Math.random() * Math.PI*2;
+    const spd = 1.2 + Math.random() * 3.5;
+    G.particles.push({
+      x: cx + (Math.random()-.5)*16,
+      y: cy + (Math.random()-.5)*16,
+      vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd - .5,
+      life: 1, maxLife: .5 + Math.random()*.55,
+      color: col.fill, size: 2.5 + Math.random()*4.5,
+      isHeart: Math.random() < .38,
+    });
+  }
+}
+
+function updatePetals(dt) {
+  const W = canvas.width, H = canvas.height;
+  for (const p of G.petals) {
+    p.x += p.vx; p.y += p.vy;
+    if (p.y < -20) { p.y = H + 10; p.x = Math.random()*W; }
+    if (p.x < -20) p.x = W + 10;
+    if (p.x > W+20) p.x = -10;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   RENDERING
+═══════════════════════════════════════════════════════ */
+function render() {
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  drawBackground(W, H);
+  drawPetals();
+  drawPath();
+  drawDoomPortal();
+  drawChain();
+  if (G.proj && G.proj.active) drawProjectile();
+  drawAimLine();
+  drawLauncher();
+  drawNextPreview(W, H);
+  drawParticles();
+}
+
+/* ── BACKGROUND ── */
+function drawBackground(W, H) {
+  const bg = ctx.createRadialGradient(W*.42, H*.38, 0, W*.5, H*.5, W*.72);
+  bg.addColorStop(0,   '#241028');
+  bg.addColorStop(.55, '#180d22');
+  bg.addColorStop(1,   '#0e0716');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Rainbow arc in the sky (very subtle)
+  const arcR = [
+    'rgba(255,107,157,.03)', 'rgba(255,140,66,.025)', 'rgba(255,209,102,.03)',
+    'rgba(107,207,127,.025)','rgba(97,165,248,.025)',  'rgba(192,143,224,.03)',
+  ];
+  const arcCx = W*.5, arcCy = H*-.1;
+  arcR.forEach((c, i) => {
+    const r = W * (.42 + i*.055);
+    ctx.beginPath();
+    ctx.arc(arcCx, arcCy, r, 0, Math.PI);
+    ctx.strokeStyle = c;
+    ctx.lineWidth = W * .07;
+    ctx.stroke();
+  });
+
+  // Stars
+  ctx.fillStyle = 'rgba(255,255,255,.22)';
+  [[.10,.12],[.86,.10],[.48,.06],[.70,.16],[.28,.22],[.58,.08],[.92,.22]]
+    .forEach(([sx, sy]) => {
+      ctx.beginPath();
+      ctx.arc(sx*W, sy*H, 1.2, 0, Math.PI*2);
+      ctx.fill();
+    });
+}
+
+/* ── PETALS ── */
+function drawPetals() {
+  for (const p of G.petals) {
+    ctx.save();
+    ctx.globalAlpha = p.a;
+    ctx.fillStyle = `hsl(${p.hue},80%,78%)`;
+    ctx.beginPath();
+    ctx.ellipse(p.x, p.y, p.sz, p.sz*.6, Math.random()*.3, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+/* ── PATH ── */
+function drawPath() {
+  if (!PATH) return;
+  const { points } = PATH;
+
+  // Soft glow track
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  points.forEach(p => ctx.lineTo(p.x, p.y));
+  ctx.strokeStyle = 'rgba(255,160,200,.05)';
+  ctx.lineWidth   = HEART_R * 2.6;
+  ctx.lineCap = ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  // Dashed centre line
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  points.forEach(p => ctx.lineTo(p.x, p.y));
+  ctx.strokeStyle = 'rgba(255,160,200,.12)';
+  ctx.lineWidth   = 2;
+  ctx.setLineDash([6, 10]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+/* ── DOOM PORTAL ── */
+function drawDoomPortal() {
+  const pos = posAtDist(PATH.totalLen);
+  const x = pos.x, y = pos.y;
+  const t = performance.now() / 1000;
+
+  for (let r = 30; r >= 8; r -= 6) {
+    const pulse = 1 + .12 * Math.sin(t * 3.5 + r * .15);
+    ctx.beginPath();
+    ctx.arc(x, y, r * pulse, 0, Math.PI*2);
+    ctx.strokeStyle = `rgba(255,80,120,${.04 + (30-r)*.012})`;
+    ctx.lineWidth   = 3;
+    ctx.stroke();
+  }
+  ctx.beginPath();
+  ctx.arc(x, y, 8, 0, Math.PI*2);
+  ctx.fillStyle = `rgba(255,60,100,${.25 + .1*Math.sin(t*4)})`;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,120,150,.65)';
+  ctx.lineWidth   = 1.5;
+  ctx.stroke();
+
+  // ✕ inside
+  ctx.strokeStyle = 'rgba(255,255,255,.65)';
+  ctx.lineWidth   = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(x-4, y-4); ctx.lineTo(x+4, y+4);
+  ctx.moveTo(x+4, y-4); ctx.lineTo(x-4, y+4);
+  ctx.stroke();
+}
+
+/* ── HEART SHAPE PATH ── */
+function heartShape(c, cx, cy, r) {
+  const k = r;
+  c.beginPath();
+  c.moveTo(cx, cy + k*.9);
+  c.bezierCurveTo(cx+k*.85, cy+k*.4,  cx+k*.95, cy-k*.28, cx+k*.55, cy-k*.65);
+  c.bezierCurveTo(cx+k*.18, cy-k*.9,  cx,        cy-k*.62, cx,        cy-k*.38);
+  c.bezierCurveTo(cx,        cy-k*.62, cx-k*.18, cy-k*.9,  cx-k*.55, cy-k*.65);
+  c.bezierCurveTo(cx-k*.95, cy-k*.28, cx-k*.85, cy+k*.4,  cx,        cy+k*.9);
+  c.closePath();
+}
+
+/* ── DRAW HEART ── */
+function drawHeart(cx, cy, r, col, isLead) {
+  // Glow halo for lead heart
+  if (isLead && col.glow) {
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r*2.8);
+    g.addColorStop(0, col.glow);
+    g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r*2.8, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  // Heart fill
+  heartShape(ctx, cx, cy, r);
+  ctx.fillStyle = col.fill;
+  ctx.fill();
+
+  // Shine overlay (clip to heart)
+  ctx.save();
+  heartShape(ctx, cx, cy, r);
+  ctx.clip();
+  const shine = ctx.createLinearGradient(cx-r*.4, cy-r*.8, cx+r*.2, cy+r*.2);
+  shine.addColorStop(0, 'rgba(255,255,255,.42)');
+  shine.addColorStop(1, 'transparent');
+  ctx.fillStyle = shine;
+  ctx.fillRect(cx-r*1.1, cy-r*1.1, r*2.2, r*2.2);
+  ctx.restore();
+
+  // Border
+  heartShape(ctx, cx, cy, r);
+  ctx.strokeStyle = 'rgba(255,255,255,.18)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
+/* ── CHAIN ── */
+function drawChain() {
+  // Draw back to front so lead heart (index 0) is on top
+  for (let i = G.chain.length-1; i >= 0; i--) {
+    const h = G.chain[i];
+    if (!h.vis) continue;
+    drawHeart(h.x, h.y, HEART_R, COLORS[h.colorId], i === 0);
+  }
+}
+
+/* ── PROJECTILE ── */
+function drawProjectile() {
+  const p = G.proj;
+  drawHeart(p.x, p.y, HEART_R, COLORS[p.colorId], true);
+}
+
+/* ── LAUNCHER (ROSE) ── */
+function drawLauncher() {
+  const L = G.launcher;
+  const ang = L.aimAngle - Math.PI/2; // -π/2 so flower points in aim direction
+
+  ctx.save();
+  ctx.translate(L.x, L.y);
+  ctx.rotate(ang);
+
+  // Stem
+  ctx.strokeStyle = '#5A8C6A'; ctx.lineWidth = 3.5; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(0, 8); ctx.lineTo(0, 30); ctx.stroke();
+
+  // Leaf
+  ctx.fillStyle = '#7AB87A';
+  ctx.beginPath(); ctx.ellipse(-8, 20, 5.5, 10, -.55, 0, Math.PI*2); ctx.fill();
+
+  // Outer petals (5)
+  for (let i = 0; i < 5; i++) {
+    ctx.save(); ctx.rotate(i * Math.PI*2/5);
+    ctx.fillStyle = '#E8909A';
+    ctx.beginPath(); ctx.ellipse(0, -15, 5.5, 10, 0, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+  // Inner petals (5)
+  for (let i = 0; i < 5; i++) {
+    ctx.save(); ctx.rotate(i * Math.PI*2/5 + Math.PI/5);
+    ctx.fillStyle = '#D4688A';
+    ctx.beginPath(); ctx.ellipse(0, -9, 4, 7, 0, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+  // Rose centre
+  ctx.fillStyle = '#C0507A';
+  ctx.beginPath(); ctx.arc(0, 0, 5.5, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#A03565';
+  ctx.beginPath(); ctx.arc(0, 0, 2.8, 0, Math.PI*2); ctx.fill();
+
+  // Current heart preview (above rose)
+  ctx.rotate(-(ang)); // un-rotate for heart so it stays upright
+  drawHeart(0, -34, HEART_R*.88, COLORS[L.curColor], false);
+
+  ctx.restore();
+}
+
+/* ── AIM LINE ── */
+function drawAimLine() {
+  if (!G.aiming) return;
+  const L = G.launcher;
+  const dx = G.aimX - L.x, dy = G.aimY - L.y;
+  const d  = Math.sqrt(dx*dx + dy*dy);
+  if (d < SWAP_PIX + 5) return;
+
+  const nx = dx/d, ny = dy/d;
+  const col = COLORS[L.curColor];
+
+  ctx.save();
+  ctx.setLineDash([5, 9]);
+  ctx.strokeStyle = col.glow || 'rgba(255,107,157,.5)';
+  ctx.lineWidth   = 1.5;
+  // Extend aim line further from center to reach the orbiting chain
+  const aimLen = Math.min(canvas.width, canvas.height) * 0.40;
+  ctx.beginPath();
+  ctx.moveTo(L.x + nx*32, L.y + ny*32);
+  ctx.lineTo(L.x + nx*aimLen, L.y + ny*aimLen);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Small dot at aim tip
+  ctx.beginPath();
+  ctx.arc(L.x + nx*(aimLen+4), L.y + ny*(aimLen+4), 2.5, 0, Math.PI*2);
+  ctx.fillStyle = col.fill;
+  ctx.globalAlpha = .6;
+  ctx.fill();
+  ctx.restore();
+}
+
+/* ── NEXT HEART PREVIEW (corner) ── */
+function drawNextPreview(W, H) {
+  const nx = W - 28, ny = H - 22;
+  ctx.save();
+  ctx.globalAlpha = .42;
+  ctx.fillStyle   = '#fff';
+  ctx.font        = '7px Nunito';
+  ctx.textAlign   = 'center';
+  ctx.fillText('SIGUIENTE', nx, ny-22);
+  ctx.restore();
+  drawHeart(nx, ny, HEART_R*.72, COLORS[G.launcher.nxtColor], false);
+}
+
+/* ── PARTICLES ── */
+function drawParticles() {
+  for (const p of G.particles) {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, p.life);
+    if (p.isHeart) {
+      drawHeart(p.x, p.y, p.size, { fill: p.color, glow: null }, false);
+    } else {
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+  }
+}
+
+/* ─── COMBO FLASH ────────────────────────────────── */
+function showComboFlash(combo, run) {
+  const el  = document.getElementById('comboflash');
+  const sz  = Math.min(60 + combo * 8, 110);
+  el.style.fontSize = sz + 'px';
+  el.innerHTML = `x${combo}<br><span style="font-size:${sz*.38}px;color:#FFB8D6">
+    ${run >= 5 ? '¡Increíble!' : run >= 4 ? '¡Hermoso!' : '¡Combo!'}</span>`;
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+}
+
+/* ═══════════════════════════════════════════════════════
+   HUD
+═══════════════════════════════════════════════════════ */
+function updateHUD() {
+  document.getElementById('hudScore').textContent = G.score.toLocaleString();
+  const prog = Math.max(0, Math.min(100, (G.cleared / CHAIN_LEN) * 100));
+  document.getElementById('hudProg').style.width = prog + '%';
+  const comboEl = document.getElementById('hudCombo');
+  comboEl.textContent = G.combo >= 2 ? `✦ x${G.combo} combo` : '';
+}
+
+/* ═══════════════════════════════════════════════════════
+   INPUT
+═══════════════════════════════════════════════════════ */
+function initInput() {
+  canvas.addEventListener('touchstart', onStart, { passive: false });
+  canvas.addEventListener('touchmove',  onMove,  { passive: false });
+  canvas.addEventListener('touchend',   onEnd,   { passive: false });
+  canvas.addEventListener('touchcancel',onEnd,   { passive: false });
+  canvas.addEventListener('mousedown',  onStart);
+  canvas.addEventListener('mousemove',  onMoveMouse);
+  canvas.addEventListener('mouseup',    onEnd);
+}
+
+function getXY(e) {
+  const rect = canvas.getBoundingClientRect();
+  const sx = canvas.width  / rect.width;
+  const sy = canvas.height / rect.height;
+  const src = e.touches ? e.touches[0] : e;
+  return { x: (src.clientX - rect.left)*sx, y: (src.clientY - rect.top)*sy };
+}
+
+function onStart(e) {
+  e.preventDefault();
+  if (!G.running || G.paused) return;
+  const { x, y } = getXY(e);
+  G.touchStart = { x, y };
+  G.aiming     = true;
+  setAim(x, y);
+}
+
+function onMove(e) {
+  e.preventDefault();
+  if (!G.running || G.paused || !G.aiming) return;
+  setAim(getXY(e).x, getXY(e).y);
+}
+
+function onMoveMouse(e) {
+  if (!G.running || G.paused || !G.aiming) return;
+  setAim(getXY(e).x, getXY(e).y);
+}
+
+function onEnd(e) {
+  if (e.cancelable) e.preventDefault();
+  if (!G.running || G.paused || !G.aiming) return;
+  G.aiming = false;
+
+  if (!G.touchStart) return;
+  const { x, y } = getXY(e.changedTouches ? {changedTouches: e.changedTouches, touches: e.changedTouches} : e);
+  const dx = G.aimX - G.touchStart.x;
+  const dy = G.aimY - G.touchStart.y;
+  const moved = Math.sqrt(dx*dx + dy*dy);
+  G.touchStart = null;
+
+  if (moved < SWAP_PIX) {
+    swapColors();
+  } else {
+    fire();
+  }
+}
+
+function setAim(x, y) {
+  G.aimX = x; G.aimY = y;
+  const dx = x - G.launcher.x, dy = y - G.launcher.y;
+  G.launcher.aimAngle = Math.atan2(dy, dx);
+}
+
+/* ═══════════════════════════════════════════════════════
+   GAME FLOW
+═══════════════════════════════════════════════════════ */
+const MSGS_WIN = [
+  '¡Lo lograste, Britney! Eres brillante 🌸',
+  '¡Arcoíris completo, preciosa! 🌈',
+  '¡Increíble, amor! Cada corazón brilla por ti ✨',
+  '¡Todos los corazones son tuyos! 💖',
+];
+const MSGS_LOSE = [
+  'Los corazones llegaron al portal... ¡pero tú puedes más! 💌',
+  '¡Casi, preciosa! Inténtalo de nuevo 🌹',
+  'Tu belleza también está en intentarlo 🌷',
+  'Un corazón más rápido la próxima vez 🌸',
+];
+
+function startGame() {
+  showScreen(null);
+  document.getElementById('hud').classList.add('on');
+  resizeCanvas();
+  resetGame();
+  G.running = true;
+  startLoop();
+}
+
+function endGame(won) {
+  G.running = false;
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  document.getElementById('hud').classList.remove('on');
+  document.getElementById('pov').classList.remove('on');
+
+  const msgs = won ? MSGS_WIN : MSGS_LOSE;
+  document.getElementById('rIcon').textContent    = won ? '🏆' : '💌';
+  document.getElementById('rTitle').textContent   = won ? '¡Hermoso, Britney!' : '¡Casi, preciosa!';
+  document.getElementById('rScore').textContent   = G.score.toLocaleString();
+  document.getElementById('rMsg').textContent     = msgs[Math.floor(Math.random()*msgs.length)];
+  showScreen('sr');
+
+  // Celebration particles
+  if (won) {
+    for (let i = 0; i < 40; i++) {
+      const ang = Math.random()*Math.PI*2, spd = 2+Math.random()*4;
+      G.particles.push({
+        x: canvas.width*.5 + (Math.random()-.5)*60,
+        y: canvas.height*.5 + (Math.random()-.5)*40,
+        vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd - 2,
+        life: 1, maxLife: .8+Math.random()*.7,
+        color: COLORS[Math.floor(Math.random()*N_COLORS)].fill,
+        size: 3+Math.random()*5, isHeart: Math.random()<.5,
+      });
+    }
+    // Keep drawing one more second
+    let ct = 0;
+    const trail = () => { if (ct++ < 60) { render(); requestAnimationFrame(trail); } };
+    requestAnimationFrame(trail);
+  }
+}
+
+function togglePause() {
+  if (!G.running) return;
+  G.paused = !G.paused;
+  document.getElementById('pov').classList.toggle('on', G.paused);
+  document.getElementById('btnPause').textContent = G.paused ? '▶' : '⏸';
+}
+
+function goHome() {
+  G.running = false;
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  document.getElementById('hud').classList.remove('on');
+  document.getElementById('pov').classList.remove('on');
+  window.location.href = 'index.html';
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.rsc').forEach(s => s.classList.remove('on'));
+  if (id) document.getElementById(id).classList.add('on');
+}
+
+/* ═══════════════════════════════════════════════════════
+   EVENT LISTENERS
+═══════════════════════════════════════════════════════ */
+document.getElementById('btnPlay')   .addEventListener('click', startGame);
+document.getElementById('btnPause')  .addEventListener('click', togglePause);
+document.getElementById('btnResume') .addEventListener('click', togglePause);
+document.getElementById('btnRestart').addEventListener('click', () => { G.running=false; document.getElementById('pov').classList.remove('on'); startGame(); });
+document.getElementById('btnHome')   .addEventListener('click', goHome);
+document.getElementById('btnRetry')  .addEventListener('click', startGame);
+document.getElementById('btnHome2')  .addEventListener('click', goHome);
+
+window.addEventListener('resize', resizeCanvas);
+
+/* ═══════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════ */
+resizeCanvas();
+initInput();
+</script>
+</body>
+</html>

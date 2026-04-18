@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Pupiletras Bíblico ✦ Para Britney</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & VARIABLES
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --tf: #5DC4A8;        /* tiffany green */
+  --tf-l: #9DDECA;      /* tiffany light */
+  --tf-d: #3A9A80;      /* tiffany dark */
+  --tf-p: #E0F5EF;      /* tiffany pale */
+  --wh: #FFFDF9;        /* warm white */
+  --cr: #FDF6EE;        /* cream */
+  --tc: #C4754A;        /* terracota */
+  --tc-l: #E8A07A;      /* terracota light */
+  --tc-p: #FAE8DC;      /* terracota pale */
+  --tc-d: #9A4F2A;      /* terracota dark */
+  --gd: #D4AF6A;        /* gold */
+  --gd-l: #EDD89A;      /* gold light */
+  --tx: #3A2520;        /* text */
+  --tx-m: #7A5048;      /* text mid */
+  --tx-l: #AA8070;      /* text light */
+  --sd: 0 4px 24px rgba(60,30,20,.12);
+  --sd2: 0 8px 32px rgba(60,30,20,.15);
+  --r: 16px;
+}
+
+html,body{
+  height:100%;overflow:hidden;
+  font-family:'Nunito',sans-serif;
+  background:var(--cr);color:var(--tx);
+  touch-action:none;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+#app{height:100%;position:relative;overflow:hidden}
+
+.screen{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transition:opacity .45s ease;
+  overflow:hidden;
+}
+.screen.active{opacity:1;pointer-events:all}
+
+/* ============================================================
+   WELCOME SCREEN
+   ============================================================ */
+#sw{
+  background:linear-gradient(160deg,#D8F5EC 0%,#FDF8F2 45%,#FAE8DC 100%);
+  overflow-y:auto;align-items:center;
+}
+
+.w-flowers-wrap{
+  width:100%;padding:32px 20px 0;
+  display:flex;justify-content:center;
+  position:relative;
+}
+.w-flowers-inner{display:flex;gap:8px;align-items:flex-end}
+
+.w-content{
+  padding:20px 28px 48px;
+  display:flex;flex-direction:column;
+  align-items:center;text-align:center;
+  width:100%;max-width:420px;
+}
+
+.eyebrow{
+  font-size:11px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--tc);
+  font-weight:600;margin-bottom:10px;
+}
+
+.w-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:48px;font-weight:600;line-height:1.0;
+  color:var(--tx);margin-bottom:4px;
+}
+.w-title em{color:var(--tf-d);font-style:italic}
+
+.w-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-size:19px;font-style:italic;
+  color:var(--tx-m);margin-bottom:24px;
+}
+
+.w-divider{
+  width:64px;height:1px;margin:0 auto 22px;
+  background:linear-gradient(to right,transparent,var(--tc),transparent);
+}
+
+.w-desc{
+  font-size:15px;line-height:1.75;
+  color:var(--tx-m);max-width:300px;margin-bottom:28px;
+}
+.w-desc strong{color:var(--tc-d)}
+
+.w-feats{
+  display:flex;flex-direction:column;gap:10px;
+  width:100%;max-width:310px;margin-bottom:32px;
+}
+.feat{
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(93,196,168,.2);
+  border-radius:14px;padding:13px 16px;
+  display:flex;align-items:center;gap:12px;
+  text-align:left;
+}
+.feat-ic{font-size:20px;flex-shrink:0}
+.feat-tx{font-size:13px;color:var(--tx-m);line-height:1.4}
+.feat-tx strong{display:block;font-size:14px;color:var(--tx);margin-bottom:1px}
+
+/* Buttons */
+.btn-p{
+  background:linear-gradient(135deg,var(--tf) 0%,var(--tf-d) 100%);
+  color:#fff;border:none;border-radius:30px;
+  padding:17px 48px;font-family:'Nunito',sans-serif;
+  font-size:17px;font-weight:800;letter-spacing:.3px;
+  cursor:pointer;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(93,196,168,.4);
+  transition:transform .15s,box-shadow .15s;
+}
+.btn-p::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.25) 0%,transparent 55%);
+}
+.btn-p:active{transform:scale(.97);box-shadow:0 4px 12px rgba(93,196,168,.3)}
+
+.btn-s{
+  background:rgba(255,255,255,.8);
+  color:var(--tx-m);border:1px solid rgba(93,196,168,.3);
+  border-radius:30px;padding:13px 32px;
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;transition:all .15s;margin-top:12px;
+}
+.btn-s:active{transform:scale(.97);background:var(--tf-p)}
+
+.btn-menu{
+  display:inline-block;
+  background:rgba(255,255,255,.8);
+  color:var(--tx-m);border:1px solid rgba(93,196,168,.3);
+  border-radius:30px;padding:13px 32px;
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;transition:all .15s;margin-top:12px;
+  text-decoration:none;text-align:center;
+}
+.btn-menu:active{transform:scale(.97);background:var(--tf-p)}
+
+/* ============================================================
+   GAME SCREEN
+   ============================================================ */
+#sg{background:var(--cr)}
+
+.g-header{
+  background:rgba(253,246,238,.96);
+  backdrop-filter:blur(12px);
+  padding:10px 18px;
+  border-bottom:1px solid rgba(93,196,168,.18);
+  display:flex;align-items:center;
+  justify-content:space-between;flex-shrink:0;
+}
+.g-timer-wrap{display:flex;flex-direction:column;align-items:flex-start}
+.g-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--tx-l)}
+.g-timer{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:500;
+  color:var(--tf-d);line-height:1;
+}
+.g-theme{
+  background:linear-gradient(135deg,var(--tc-p),var(--tf-p));
+  border:1px solid rgba(196,117,74,.18);
+  border-radius:20px;padding:5px 12px;
+  font-size:11px;font-weight:700;color:var(--tx-m);
+  text-align:center;max-width:135px;line-height:1.3;
+}
+.g-best-wrap{display:flex;flex-direction:column;align-items:flex-end}
+.g-best{
+  font-family:'Cormorant Garamond',serif;
+  font-size:19px;font-weight:500;color:var(--gd);line-height:1;
+}
+
+/* Progress rail */
+.prog-rail{height:3px;background:rgba(93,196,168,.12);flex-shrink:0}
+.prog-fill{height:100%;background:linear-gradient(to right,var(--tf),var(--tc-l));transition:width .5s ease}
+
+/* Words panel */
+.words-panel{
+  padding:8px 14px 6px;
+  background:rgba(255,253,249,.85);
+  border-bottom:1px solid rgba(93,196,168,.1);
+  flex-shrink:0;
+}
+.wp-meta{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:7px;
+}
+.wp-cnt{font-size:11px;color:var(--tx-l);font-weight:600}
+.wp-bar{flex:1;height:3px;background:rgba(93,196,168,.15);border-radius:2px;overflow:hidden}
+.wp-bar-fill{height:100%;background:var(--tf);border-radius:2px;transition:width .5s ease}
+
+.words-chips{display:flex;flex-wrap:wrap;gap:6px}
+
+.chip{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 11px;border-radius:20px;
+  font-size:11.5px;font-weight:800;letter-spacing:.4px;
+  background:#fff;border:1.5px solid var(--tf-l);
+  color:var(--tx);cursor:pointer;
+  transition:all .25s ease;
+  user-select:none;-webkit-user-select:none;
+  white-space:nowrap;
+}
+.chip.found{
+  background:var(--tf);border-color:var(--tf);
+  color:#fff;text-decoration:line-through;opacity:.65;
+}
+.chip.locked{
+  background:#F5F0EA;border-color:#D4B8A0;color:var(--tx-l);
+}
+.chip.locked .chip-word{filter:blur(3.5px);user-select:none}
+.chip.pulse{animation:chip-pop .4s ease}
+@keyframes chip-pop{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+
+/* Grid */
+.grid-wrap{
+  flex:1;display:flex;
+  align-items:center;justify-content:center;
+  padding:8px 14px;overflow:hidden;
+}
+
+#grid{
+  display:grid;
+  grid-template-columns:repeat(14,1fr);
+  gap:2px;
+  width:min(calc(100vw - 28px),430px);
+  touch-action:none;
+  user-select:none;-webkit-user-select:none;
+}
+
+.cell{
+  aspect-ratio:1;display:flex;
+  align-items:center;justify-content:center;
+  font-size:calc(min(100vw - 28px, 430px) / 14 * 0.44);
+  font-weight:800;font-family:'Nunito',sans-serif;
+  border-radius:5px;
+  background:#fff;color:var(--tx);
+  border:1px solid rgba(93,196,168,.1);
+  transition:background .12s,color .12s,transform .08s;
+  cursor:pointer;
+}
+.cell.sel{
+  background:var(--tc-p);color:var(--tc-d);
+  transform:scale(1.06);z-index:2;
+  border-color:var(--tc-l);
+}
+.cell.f0{background:#5DC4A8;color:#fff;border-color:#4aab90}
+.cell.f1{background:#E8A070;color:#fff;border-color:#d08858}
+.cell.f2{background:#D4AF6A;color:#fff;border-color:#bc9750}
+.cell.f3{background:#A8C4B8;color:#fff;border-color:#90afa1}
+.cell.f4{background:#C8909A;color:#fff;border-color:#b07882}
+.cell.f5{background:#8BB8D0;color:#fff;border-color:#72a0bc}
+.cell.f6{background:#B8A8D4;color:#fff;border-color:#a090c0}
+.cell.f7{background:#C8B490;color:#fff;border-color:#b09c78}
+
+/* Actions bar */
+.g-actions{
+  padding:8px 14px 14px;
+  display:flex;gap:8px;flex-shrink:0;
+}
+.btn-g{
+  flex:1;padding:10px 6px;
+  border:none;border-radius:12px;
+  font-family:'Nunito',sans-serif;
+  font-size:12px;font-weight:800;
+  cursor:pointer;transition:all .15s;
+}
+.btn-g:active{transform:scale(.95)}
+.btn-g-rst{background:var(--tc-p);color:var(--tc-d);border:1px solid rgba(196,117,74,.2)}
+.btn-g-new{
+  background:linear-gradient(135deg,var(--tf),var(--tf-d));
+  color:#fff;box-shadow:0 4px 14px rgba(93,196,168,.35);
+}
+.btn-g-st{background:#fff;color:var(--tx-m);border:1px solid rgba(93,196,168,.2)}
+
+/* ============================================================
+   CHALLENGE MODAL
+   ============================================================ */
+.modal-ov{
+  position:fixed;inset:0;
+  background:rgba(58,37,32,.6);
+  backdrop-filter:blur(5px);
+  z-index:100;display:flex;
+  align-items:flex-end;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+.modal-ov.open{opacity:1;pointer-events:all}
+
+.modal-card{
+  background:var(--wh);
+  border-radius:24px 24px 0 0;
+  padding:20px 22px 40px;
+  width:100%;max-width:480px;margin:0 auto;
+  transform:translateY(100%);
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.modal-ov.open .modal-card{transform:translateY(0)}
+
+.modal-handle{
+  width:38px;height:4px;
+  background:rgba(93,196,168,.3);
+  border-radius:2px;margin:0 auto 18px;
+}
+.modal-ttl{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:600;margin-bottom:4px;
+}
+.modal-sub{font-size:13px;color:var(--tx-l);margin-bottom:18px}
+
+.ch-q{
+  background:linear-gradient(135deg,var(--tf-p),var(--tc-p));
+  border-radius:14px;padding:16px;
+  margin-bottom:18px;font-size:16px;
+  line-height:1.5;color:var(--tx);font-weight:600;
+  text-align:center;
+}
+
+.ch-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+
+.ch-opt{
+  padding:13px 10px;border-radius:12px;
+  border:1.5px solid rgba(93,196,168,.25);
+  background:#fff;
+  font-family:'Nunito',sans-serif;
+  font-size:13.5px;font-weight:700;
+  color:var(--tx);cursor:pointer;
+  transition:all .18s;text-align:center;
+}
+.ch-opt:active{transform:scale(.97)}
+.ch-opt.ok{background:var(--tf);border-color:var(--tf);color:#fff}
+.ch-opt.no{background:#FFE0D8;border-color:#FFADA0;color:#C04030}
+
+.ch-hint{font-size:13px;text-align:center;color:var(--tx-l);min-height:18px}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+#toast-wrap{
+  position:fixed;bottom:96px;left:50%;
+  transform:translateX(-50%);
+  z-index:200;pointer-events:none;
+  display:flex;flex-direction:column;
+  align-items:center;gap:8px;
+  width:min(300px,90vw);
+}
+.toast{
+  background:rgba(255,253,249,.96);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(93,196,168,.3);
+  border-radius:24px;
+  padding:11px 20px;
+  text-align:center;
+  box-shadow:var(--sd2);
+  animation:t-in .4s cubic-bezier(.34,1.56,.64,1) forwards,
+             t-out .35s ease 2.8s forwards;
+}
+.t-em{font-size:17px;margin-bottom:3px}
+.t-tx{
+  font-family:'Cormorant Garamond',serif;
+  font-size:15px;font-style:italic;
+  color:var(--tx);line-height:1.3;
+}
+@keyframes t-in{from{opacity:0;transform:scale(.8) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes t-out{from{opacity:1}to{opacity:0;transform:scale(.9) translateY(-8px)}}
+
+/* ============================================================
+   COMPLETION SCREEN
+   ============================================================ */
+#sc{
+  background:linear-gradient(160deg,var(--tf-p) 0%,var(--wh) 40%,var(--tc-p) 100%);
+  align-items:center;justify-content:center;
+  text-align:center;overflow-y:auto;
+  padding:36px 28px 48px;
+}
+.c-icon{
+  font-size:62px;margin-bottom:14px;
+  animation:b-in .6s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes b-in{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+.c-ttl{
+  font-family:'Cormorant Garamond',serif;
+  font-size:34px;font-weight:600;
+  color:var(--tx);margin-bottom:5px;
+}
+.c-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px;font-style:italic;
+  color:var(--tx-m);margin-bottom:26px;
+}
+.rec-badge{
+  background:linear-gradient(135deg,var(--gd),var(--gd-l));
+  color:#fff;padding:5px 14px;
+  border-radius:12px;font-size:12px;
+  font-weight:800;letter-spacing:.4px;
+  display:inline-block;margin-bottom:14px;
+  box-shadow:0 4px 12px rgba(212,175,106,.4);
+}
+.c-stats{
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(10px);
+  border-radius:20px;padding:20px 22px;
+  width:100%;max-width:300px;
+  margin-bottom:24px;
+  border:1px solid rgba(93,196,168,.2);
+}
+.s-row{
+  display:flex;justify-content:space-between;
+  align-items:center;padding:9px 0;
+  border-bottom:1px solid rgba(93,196,168,.1);
+}
+.s-row:last-child{border:none}
+.s-lbl{font-size:13.5px;color:var(--tx-m)}
+.s-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:19px;font-weight:500;color:var(--tx);
+}
+.s-val.gold{color:var(--gd)}
+
+.love-card{
+  background:linear-gradient(135deg,#FFF8F0,#FFF0F8);
+  border:1.5px solid rgba(196,117,74,.2);
+  border-radius:18px;padding:20px;
+  max-width:300px;text-align:center;margin-bottom:20px;
+}
+.love-ic{font-size:32px;margin-bottom:10px}
+.love-tx{
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;font-style:italic;
+  line-height:1.65;color:var(--tx);
+}
+
+.c-msg{
+  font-family:'Cormorant Garamond',serif;
+  font-size:19px;font-style:italic;
+  color:var(--tx-m);margin-bottom:28px;
+  max-width:280px;line-height:1.5;
+}
+.c-acts{display:flex;flex-direction:column;gap:11px;width:100%;max-width:260px}
+
+/* ============================================================
+   STATS SCREEN
+   ============================================================ */
+#ss{background:var(--cr)}
+.ss-hdr{
+  padding:18px 22px 14px;
+  display:flex;align-items:center;gap:14px;
+  border-bottom:1px solid rgba(93,196,168,.15);
+  flex-shrink:0;
+}
+.ss-ttl{
+  font-family:'Cormorant Garamond',serif;
+  font-size:25px;font-weight:500;
+}
+.btn-back{
+  background:none;border:none;
+  font-size:22px;cursor:pointer;padding:2px;
+  color:var(--tx-m);
+}
+.ss-body{flex:1;padding:18px 22px;overflow-y:auto}
+.ss-card{
+  background:#fff;border-radius:16px;
+  padding:18px;margin-bottom:14px;
+  box-shadow:var(--sd);
+}
+.ss-cl{
+  font-size:11px;text-transform:uppercase;
+  letter-spacing:1.5px;color:var(--tx-l);
+  margin-bottom:14px;
+}
+.ss-big{
+  font-family:'Cormorant Garamond',serif;
+  font-size:52px;font-weight:300;
+  color:var(--tf-d);line-height:1;
+}
+.ss-gr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ss-mini{
+  background:linear-gradient(135deg,var(--tf-p),var(--wh));
+  border-radius:12px;padding:14px;text-align:center;
+}
+.ss-mv{
+  font-family:'Cormorant Garamond',serif;
+  font-size:34px;font-weight:400;
+  color:var(--tx);line-height:1;
+}
+.ss-ml{font-size:11px;color:var(--tx-l);margin-top:3px}
+.ss-poem{
+  background:linear-gradient(135deg,var(--tf-p),#fff);
+  border-radius:16px;padding:20px;
+  margin-bottom:14px;text-align:center;
+}
+.ss-poem-tx{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-style:italic;
+  color:var(--tx);line-height:1.65;
+}
+.ss-poem-by{font-size:12px;color:var(--tx-l);margin-top:8px}
+
+/* ============================================================
+   SPARKLE LAYER
+   ============================================================ */
+#sparks{
+  position:fixed;inset:0;
+  pointer-events:none;z-index:300;
+  overflow:hidden;
+}
+.sp{
+  position:absolute;border-radius:50%;
+  pointer-events:none;
+  animation:sp-burst .7s ease-out forwards;
+}
+@keyframes sp-burst{
+  0%{transform:translate(0,0) scale(1);opacity:1}
+  100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}
+}
+.amb{
+  position:absolute;width:5px;height:5px;
+  background:var(--gd-l);border-radius:50%;
+  animation:amb-fl var(--d) ease-in-out infinite;opacity:0;
+}
+@keyframes amb-fl{
+  0%{transform:translateY(0) scale(0);opacity:0}
+  20%{opacity:.55;transform:translateY(-18px) scale(1)}
+  80%{opacity:.3}
+  100%{transform:translateY(-55px) scale(0);opacity:0}
+}
+.confp{
+  position:fixed;pointer-events:none;z-index:250;
+  animation:cf-fl var(--d) ease-in var(--dl) forwards;
+}
+@keyframes cf-fl{
+  0%{transform:translateY(-40px) rotate(0deg);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+.tsp{
+  position:fixed;pointer-events:none;z-index:999;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--gd-l) 0%,var(--tf) 60%,transparent 100%);
+  animation:ts-fade .45s ease-out forwards;
+}
+@keyframes ts-fade{
+  0%{transform:scale(1);opacity:.8}
+  100%{transform:scale(2.2);opacity:0}
+}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-3px)}
+  75%{transform:translateX(3px)}
+}
+
+.dfl{position:absolute;pointer-events:none;opacity:.2}
+.mt12{margin-top:12px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ===================== WELCOME ===================== -->
+<div id="sw" class="screen active">
+  <div class="w-flowers-wrap">
+    <div id="wf"></div>
+  </div>
+  <div class="w-content">
+    <p class="eyebrow">✦ Una experiencia especial ✦</p>
+    <h1 class="w-title">Pupiletras<br><em>Bíblico</em></h1>
+    <p class="w-sub">para Britney 💚</p>
+    <div class="w-divider"></div>
+    <p class="w-desc">
+      Esto no es una sopa de letras común.<br>
+      Es una <strong>experiencia interactiva</strong> hecha solo para ti,
+      con palabras de la Biblia que amo tanto como a ti,
+      desafíos especiales y mensajes de mi corazón.
+    </p>
+    <div class="w-feats">
+      <div class="feat">
+        <span class="feat-ic">✦</span>
+        <div class="feat-tx"><strong>Pupiletras Bíblico Avanzado</strong>Personajes, lugares, virtudes y más. Siempre distinto.</div>
+      </div>
+      <div class="feat">
+        <span class="feat-ic">🔓</span>
+        <div class="feat-tx"><strong>Desafíos Bíblicos</strong>Responde preguntas para desbloquear palabras especiales.</div>
+      </div>
+      <div class="feat">
+        <span class="feat-ic">💌</span>
+        <div class="feat-tx"><strong>Mensajes Secretos</strong>Mientras juegas, hay sorpresas esperándote.</div>
+      </div>
+    </div>
+    <button class="btn-p" onclick="startGame()">Comenzar ✨</button>
+    <button class="btn-s" onclick="showStats()">Ver mis estadísticas 📊</button>
+    <a href="index.html" class="btn-menu">🌸 Volver al menú</a>
+  </div>
+</div>
+
+<!-- ===================== GAME ===================== -->
+<div id="sg" class="screen">
+  <div class="g-header">
+    <div class="g-timer-wrap">
+      <span class="g-lbl">Tiempo</span>
+      <span class="g-timer" id="gtimer">00:00</span>
+    </div>
+    <div>
+      <div class="g-theme" id="gtheme">Cargando...</div>
+    </div>
+    <div class="g-best-wrap">
+      <span class="g-lbl">🏆 Récord</span>
+      <span class="g-best" id="gbest">--:--</span>
+    </div>
+  </div>
+  <div class="prog-rail"><div class="prog-fill" id="gprog" style="width:0%"></div></div>
+  <div class="words-panel">
+    <div class="wp-meta">
+      <span class="wp-cnt" id="wpcnt">0 / 0 palabras</span>
+      <div class="wp-bar"><div class="wp-bar-fill" id="wpfill" style="width:0%"></div></div>
+    </div>
+    <div class="words-chips" id="wchips"></div>
+  </div>
+  <div class="grid-wrap"><div id="grid"></div></div>
+  <div class="g-actions">
+    <button class="btn-g btn-g-rst" onclick="restartGame()">↺ Reiniciar</button>
+    <button class="btn-g btn-g-new" onclick="newGame()">✦ Nueva Partida</button>
+    <button class="btn-g btn-g-st" onclick="showStats()">📊 Stats</button>
+  </div>
+</div>
+
+<!-- ===================== COMPLETION ===================== -->
+<div id="sc" class="screen">
+  <div class="c-icon" id="cicon">✨</div>
+  <h2 class="c-ttl">¡Lo lograste, Britney!</h2>
+  <p class="c-sub" id="csub">Partida completada</p>
+  <div class="rec-badge" id="recbadge" style="display:none">⭐ ¡Nuevo Récord Personal!</div>
+  <div class="c-stats">
+    <div class="s-row"><span class="s-lbl">Tiempo esta ronda</span><span class="s-val" id="ctime">00:00</span></div>
+    <div class="s-row"><span class="s-lbl">🏆 Mejor tiempo</span><span class="s-val gold" id="cbest">--:--</span></div>
+    <div class="s-row"><span class="s-lbl">Partidas completadas</span><span class="s-val" id="cgames">0</span></div>
+    <div class="s-row"><span class="s-lbl">Palabras encontradas</span><span class="s-val" id="cwords">0</span></div>
+  </div>
+  <div class="love-card" id="lovecard" style="display:none">
+    <div class="love-ic">💌</div>
+    <p class="love-tx" id="lovetx"></p>
+  </div>
+  <p class="c-msg" id="cmsg">Eres increíble, Britney 💚</p>
+  <div class="c-acts">
+    <button class="btn-p" onclick="newGame()">Jugar otra ronda ✨</button>
+    <button class="btn-s" onclick="showStats()">Ver estadísticas 📊</button>
+    <button class="btn-s" onclick="goHome()">🌸 Inicio del juego</button>
+    <a href="index.html" class="btn-menu">← Menú principal</a>
+  </div>
+</div>
+
+<!-- ===================== STATS ===================== -->
+<div id="ss" class="screen">
+  <div class="ss-hdr">
+    <button class="btn-back" id="backbtn">←</button>
+    <h2 class="ss-ttl">Estadísticas de Britney</h2>
+  </div>
+  <div class="ss-body">
+    <div class="ss-card">
+      <p class="ss-cl">✦ Mejor Tiempo Personal</p>
+      <div class="ss-big" id="ssbest">--:--</div>
+      <p style="font-size:12px;color:var(--tx-l);margin-top:4px">El récord a superar 🏆</p>
+    </div>
+    <div class="ss-card">
+      <p class="ss-cl">✦ Resumen de Partidas</p>
+      <div class="ss-gr">
+        <div class="ss-mini"><div class="ss-mv" id="ssplayed">0</div><div class="ss-ml">Jugadas</div></div>
+        <div class="ss-mini" style="background:linear-gradient(135deg,var(--tc-p),var(--wh))"><div class="ss-mv" id="ssdone">0</div><div class="ss-ml">Completadas</div></div>
+        <div class="ss-mini" style="background:linear-gradient(135deg,#FFF8E0,var(--wh))"><div class="ss-mv" id="sswords">0</div><div class="ss-ml">Palabras halladas</div></div>
+        <div class="ss-mini" style="background:linear-gradient(135deg,#F0E8F8,var(--wh))"><div class="ss-mv" id="ssstreak">0</div><div class="ss-ml">Mejor racha</div></div>
+      </div>
+    </div>
+    <div class="ss-poem">
+      <p class="ss-poem-tx">"Cada vez que juegas,<br>imagino tu sonrisa,<br>y me alegra el día."</p>
+      <p class="ss-poem-by">— Con todo mi amor 💚</p>
+    </div>
+    <div style="text-align:center;padding-bottom:16px;display:flex;flex-direction:column;align-items:center;gap:10px">
+      <button class="btn-p" onclick="newGame()">Jugar ahora ✨</button>
+      <a href="index.html" class="btn-menu">← Menú principal</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CHALLENGE MODAL ===================== -->
+<div id="modal" class="modal-ov" onclick="modalClickOutside(event)">
+  <div class="modal-card">
+    <div class="modal-handle"></div>
+    <h3 class="modal-ttl">Desafío Bíblico ✦</h3>
+    <p class="modal-sub">Responde bien para desbloquear la palabra</p>
+    <div class="ch-q" id="chq"></div>
+    <div class="ch-opts" id="chopts"></div>
+    <p class="ch-hint" id="chhint"></p>
+  </div>
+</div>
+
+<!-- ===================== LAYERS ===================== -->
+<div id="sparks"></div>
+<div id="toast-wrap"></div>
+
+</div><!-- #app -->
+
+<script>
+/* ============================================================
+   WORD BANK
+   ============================================================ */
+const WB = {
+  mujeres: {
+    lbl:'Mujeres de la Biblia',
+    w:['MARIA','ESTER','RUT','DEBORA','ANA','LIDIA','SARA','REBECA','RAQUEL','NOEMI','PRISCILA','MARTA','MIRIAM','SUSANA']
+  },
+  profetas: {
+    lbl:'Profetas y Reyes',
+    w:['MOISES','DAVID','ELIAS','DANIEL','SALOMON','ISAIAS','SAMUEL','JOSUE','EZEQUIEL','OSEAS','AMOS','NEHEMIAS','ESDRAS','EZRA']
+  },
+  apostoles: {
+    lbl:'Apostoles del Senor',
+    w:['PEDRO','PABLO','JUAN','ANDRES','FELIPE','MARCOS','LUCAS','TOMAS','JACOBO','BERNABE','TIMOTEO','TITO','ESTEBAN','CORNELIO']
+  },
+  lugares: {
+    lbl:'Lugares Santos',
+    w:['BELEN','NAZARET','JERICO','GALILEA','SINAI','EDEN','EFESO','SAMARIA','HEBRON','JORDAN','BETANIA','PATMOS','CORINTO','SION']
+  },
+  virtudes: {
+    lbl:'Frutos del Espiritu',
+    w:['FE','AMOR','PAZ','GOZO','GRACIA','BONDAD','HUMILDAD','SABIDURIA','FORTALEZA','PACIENCIA','VERDAD','JUSTICIA','PUREZA','LEALTAD']
+  },
+  simbolos: {
+    lbl:'Simbolos Sagrados',
+    w:['ARCA','MANA','CRUZ','PALOMA','CORONA','OLIVO','PAN','LUZ','AGUA','PESCA','TRONO','ALTAR','TEMPLO','CALIZ']
+  },
+  promesas: {
+    lbl:'Promesas de Dios',
+    w:['REDENCION','SALVACION','LIBERACION','PERDON','VICTORIA','BENDICION','RESTAURACION','REFUGIO','DESCANSO','HERENCIA','PROVISION','GOZO']
+  },
+  momentos: {
+    lbl:'La Gran Historia',
+    w:['CREACION','DILUVIO','EXODO','RESURRECCION','PENTECOSTES','ASCENSION','NACIMIENTO','BAUTISMO','PASION','MILAGRO','LLAMADO','PACTO']
+  }
+};
+
+const THEMES = [
+  {name:'🌸 Mujeres de la Biblia', cats:['mujeres','virtudes']},
+  {name:'👑 Profetas y Reyes',     cats:['profetas','lugares']},
+  {name:'🌿 Frutos del Espiritu',  cats:['virtudes','promesas']},
+  {name:'✨ Simbolos y Milagros',  cats:['simbolos','momentos']},
+  {name:'📖 La Gran Historia',     cats:['momentos','profetas']},
+  {name:'🌟 Apostoles del Senor',  cats:['apostoles','lugares']},
+  {name:'🕊️ Lugares Santos',       cats:['lugares','simbolos']},
+  {name:'🏆 Victoria y Promesas',  cats:['promesas','virtudes']}
+];
+
+/* ============================================================
+   CHALLENGES
+   ============================================================ */
+const CQ = [
+  {q:'¿Cuántos días ayunó Jesús en el desierto?',       opts:['7 días','40 días','3 días','30 días'],       ans:1},
+  {q:'¿Quién fue tragado por un gran pez?',             opts:['Elías','Pablo','Jonás','Daniel'],             ans:2},
+  {q:'¿En qué ciudad nació Jesús?',                     opts:['Nazaret','Jerusalén','Belén','Jericó'],       ans:2},
+  {q:'¿Quién construyó el arca del diluvio?',           opts:['Abraham','Noé','Moisés','David'],             ans:1},
+  {q:'¿A quién liberó Dios de la boca de los leones?',  opts:['Josué','David','Daniel','Pablo'],             ans:2},
+  {q:'¿Cuántos libros tiene la Biblia completa?',       opts:['60','66','72','50'],                          ans:1},
+  {q:'¿Qué río cruzó Israel para entrar a Canaán?',     opts:['Nilo','Éufrates','Jordán','Tigris'],          ans:2},
+  {q:'¿Cuántos apóstoles eligió Jesús?',                opts:['7','10','12','15'],                           ans:2},
+  {q:'¿En qué monte recibió Moisés los mandamientos?',  opts:['Carmelo','Sinaí','Olivos','Horeb'],           ans:1},
+  {q:'¿Quién escribió más cartas del Nuevo Testamento?',opts:['Juan','Pedro','Pablo','Marcos'],              ans:2},
+  {q:'¿Con qué multiplicó Jesús la comida para 5000?',  opts:['Pan y vino','Pan y peces','Arroz','Maná'],    ans:1},
+  {q:'¿Cómo se llamaba la esposa de Abraham?',          opts:['Rebeca','Raquel','Sara','Ruth'],              ans:2},
+  {q:'¿Quién fue el primer mártir cristiano en Hechos?',opts:['Pedro','Esteban','Santiago','Felipe'],        ans:1},
+  {q:'¿Dónde oró Jesús antes de ser arrestado?',        opts:['Sinaí','Gólgota','Getsemaní','Galilea'],      ans:2},
+  {q:'¿Cuántos días estuvo Jonás dentro del pez?',      opts:['1 día','3 días','7 días','40 días'],          ans:1},
+  {q:'¿Cuál es el salmo del "El Señor es mi pastor"?',  opts:['Salmo 1','Salmo 23','Salmo 91','Salmo 150'], ans:1},
+  {q:'¿Quién ungió a David como rey de Israel?',        opts:['Moisés','Elías','Samuel','Salomón'],          ans:2},
+  {q:'¿Qué simboliza la paloma en la Biblia?',          opts:['Fe','El Espíritu Santo','Paz','Amor'],        ans:1},
+  {q:'¿Cuál fue el primer milagro de Jesús?',           opts:['Resucitar muertos','Agua en vino','Peces','Sanar ciego'], ans:1},
+  {q:'¿En qué idioma fue escrito el Nuevo Testamento?', opts:['Latín','Arameo','Griego','Hebreo'],           ans:2}
+];
+
+/* ============================================================
+   MESSAGES
+   ============================================================ */
+const MSGS = [
+  {tx:'Muy bien, preciosa 🌸',em:'💚'},
+  {tx:'Eres increíble, Britney ✨',em:'🌟'},
+  {tx:'Me encantas 💚',em:'💚'},
+  {tx:'Qué hermosa eres 🌺',em:'🌺'},
+  {tx:'Tu luz hace bonito todo ✦',em:'✨'},
+  {tx:'Eres demasiado especial 💫',em:'💫'},
+  {tx:'Admiro mucho lo que eres 🌿',em:'🌿'},
+  {tx:'Tu sonrisa alegra todo',em:'😊'},
+  {tx:'Britney, eres una bendición hermosa 🙏',em:'🙏'},
+  {tx:'Cada detalle tuyo es precioso 🌸',em:'🌸'},
+  {tx:'Tu manera de ser me encanta 💚',em:'💚'},
+  {tx:'Lo haces demasiado bien, preciosa ✨',em:'✨'},
+  {tx:'Eres tan linda por dentro y por fuera 🌺',em:'🌺'},
+  {tx:'Qué bonito es verte brillar 🌟',em:'🌟'},
+  {tx:'Dios sí que se lució contigo, Britney 💫',em:'💫'},
+  {tx:'Eres una creación preciosa del Señor 🕊️',em:'🕊️'},
+  {tx:'Tu belleza refleja la gracia de Dios ✨',em:'✨'},
+  {tx:'Tu dulzura tiene algo del cielo 🌿',em:'🌿'},
+  {tx:'Tu alma bonita adorna el mundo 🌸',em:'🌸'},
+  {tx:'Tienes una luz que no se puede esconder 🌟',em:'🌟'},
+  {tx:'Pareces una oración respondida 🙏',em:'🙏'},
+  {tx:'Hay propósito, gracia y hermosura en ti 💚',em:'💚'}
+];
+
+const CMSG = [
+  'Eres increíble, Britney. Cada palabra fue puesta pensando en ti.',
+  'Lo lograste con esa gracia tan tuya que me enamora. 💚',
+  'Así como encontraste estas palabras, así me encontraste a mí.',
+  'Tu perseverancia es tan hermosa como tú. 🌸',
+  'Britney, pareces una oración respondida. En serio.',
+  'Cada victoria tuya me llena de alegría. 🌟',
+];
+
+const LETTERS_UN = [
+  'Primera partida completa… ya saber que la jugaste me alegra el día. Gracias por recibir esto con tu corazón bonito. 💚',
+  'Cada vez que juegas imagino tu sonrisa, y eso me da tanta paz. Eres mi favorita, Britney.',
+  'Cinco partidas. Cinco veces que imagino tu cara al encontrar cada palabra. Qué bonita eres.',
+  'Diez rondas ya. Britney, eres constante y hermosa. Como tus flores favoritas, siempre mirando al sol.',
+  'Veinte partidas. Hay algo de ti que admiro muchísimo: nunca te rindes. Igual que tu fe. Te admiro de verdad.',
+];
+
+const COLORS = ['f0','f1','f2','f3','f4','f5','f6','f7'];
+const GS = 14;
+const DIRS = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let G = {
+  grid:[],words:[],
+  sel:{on:false,sr:-1,sc:-1,cells:[]},
+  tim:{val:0,iv:null},
+  prevThemes:[],prevWords:[],
+  cells:[]
+};
+
+let msgIdx = 0;
+let msgQueue = [...MSGS];
+
+/* ============================================================
+   STATS
+   ============================================================ */
+function lSt(){return JSON.parse(localStorage.getItem('bst')||'{"bt":null,"gp":0,"gc":0,"wf":0,"sk":0,"csk":0}')}
+function sSt(s){localStorage.setItem('bst',JSON.stringify(s))}
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goHome(){show('sw')}
+function showStats(){
+  const s=lSt();
+  const prev=document.querySelector('.screen.active')?.id||'sw';
+  document.getElementById('backbtn').onclick=()=>show(prev);
+  document.getElementById('ssbest').textContent=s.bt?ft(s.bt):'--:--';
+  document.getElementById('ssplayed').textContent=s.gp;
+  document.getElementById('ssdone').textContent=s.gc;
+  document.getElementById('sswords').textContent=s.wf;
+  document.getElementById('ssstreak').textContent=s.sk;
+  show('ss');
+}
+
+/* ============================================================
+   TIMER
+   ============================================================ */
+function ft(v){const m=Math.floor(v/60).toString().padStart(2,'0'),s=(v%60).toString().padStart(2,'0');return`${m}:${s}`}
+function startTim(){stopTim();G.tim.val=0;G.tim.iv=setInterval(()=>{G.tim.val++;document.getElementById('gtimer').textContent=ft(G.tim.val)},1000)}
+function stopTim(){clearInterval(G.tim.iv);G.tim.iv=null}
+
+/* ============================================================
+   GRID GENERATION
+   ============================================================ */
+function placeWord(grid,word){
+  for(let a=0;a<200;a++){
+    const [dr,dc]=DIRS[Math.floor(Math.random()*8)];
+    const sr=Math.floor(Math.random()*GS),sc=Math.floor(Math.random()*GS);
+    let ok=true;const pos=[];
+    for(let i=0;i<word.length;i++){
+      const r=sr+dr*i,c=sc+dc*i;
+      if(r<0||r>=GS||c<0||c>=GS){ok=false;break}
+      if(grid[r][c]!==''&&grid[r][c]!==word[i]){ok=false;break}
+      pos.push({r,c});
+    }
+    if(ok){pos.forEach(({r,c},i)=>grid[r][c]=word[i]);return pos}
+  }
+  return null;
+}
+
+function buildGame(){
+  let avail=THEMES.filter((_,i)=>!G.prevThemes.includes(i));
+  if(!avail.length){G.prevThemes=[];avail=THEMES}
+  const ti=THEMES.indexOf(avail[Math.floor(Math.random()*avail.length)]);
+  G.prevThemes.push(ti);if(G.prevThemes.length>3)G.prevThemes.shift();
+  const theme=THEMES[ti];
+
+  let pool=[];
+  theme.cats.forEach(cat=>{if(WB[cat])WB[cat].w.forEach(w=>pool.push({w,cat}))});
+  pool=pool.filter(p=>!G.prevWords.includes(p.w));
+  if(pool.length<10){pool=[];theme.cats.forEach(cat=>{if(WB[cat])WB[cat].w.forEach(w=>pool.push({w,cat}))})}
+  pool.sort(()=>Math.random()-.5);
+  pool=pool.slice(0,12);
+
+  const gr=Array.from({length:GS},()=>Array(GS).fill(''));
+  const words=[];let ci=0;
+
+  const chSet=new Set();
+  while(chSet.size<3&&chSet.size<pool.length)chSet.add(Math.floor(Math.random()*pool.length));
+  const shuffCQ=[...CQ].sort(()=>Math.random()-.5);let cqi=0;
+
+  pool.forEach(({w,cat},idx)=>{
+    const pos=placeWord(gr,w);
+    if(pos){
+      const isCh=chSet.has(idx);
+      words.push({w,pos,found:false,isCh,unlocked:!isCh,chd:isCh?shuffCQ[cqi++%shuffCQ.length]:null,ci:ci++%8,cat});
+    }
+  });
+
+  const al='ABCDEFGHIJKLMNOPRSTUVYZ';
+  for(let r=0;r<GS;r++)for(let c=0;c<GS;c++)if(gr[r][c]==='')gr[r][c]=al[Math.floor(Math.random()*al.length)];
+
+  G.prevWords=[...G.prevWords,...words.map(w=>w.w)].slice(-30);
+  return{gr,words,theme};
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function renderGrid(){
+  const el=document.getElementById('grid');
+  el.innerHTML='';G.cells=[];
+  for(let r=0;r<GS;r++){
+    G.cells[r]=[];
+    for(let c=0;c<GS;c++){
+      const d=document.createElement('div');
+      d.className='cell';d.textContent=G.grid[r][c];
+      d.dataset.r=r;d.dataset.c=c;
+      el.appendChild(d);G.cells[r][c]=d;
+    }
+  }
+}
+
+function renderChips(){
+  const el=document.getElementById('wchips');el.innerHTML='';
+  G.words.forEach((wd,i)=>{
+    const d=document.createElement('div');
+    let cls='chip'+(wd.found?' found':'')+(wd.isCh&&!wd.unlocked?' locked':'');
+    d.className=cls;d.id='chip'+i;
+    if(wd.isCh&&!wd.unlocked){
+      d.innerHTML=`<span>🔒</span><span class="chip-word">${wd.w}</span>`;
+      d.addEventListener('click',()=>openModal(i));
+    } else {
+      d.textContent=wd.w;
+    }
+    el.appendChild(d);
+  });
+}
+
+function updChip(i){
+  const wd=G.words[i];const d=document.getElementById('chip'+i);if(!d)return;
+  d.className='chip'+(wd.found?' found':'')+(wd.isCh&&!wd.unlocked?' locked':'');
+  if(wd.found){d.textContent=wd.w;d.classList.add('pulse');setTimeout(()=>d.classList.remove('pulse'),400)}
+  else if(wd.isCh&&!wd.unlocked){d.innerHTML=`<span>🔒</span><span class="chip-word">${wd.w}</span>`}
+  else{d.textContent=wd.w}
+}
+
+function updProgress(){
+  const tot=G.words.length,fnd=G.words.filter(w=>w.found).length;
+  const pct=tot?fnd/tot*100:0;
+  document.getElementById('wpcnt').textContent=`${fnd} / ${tot} palabras`;
+  document.getElementById('wpfill').style.width=pct+'%';
+  document.getElementById('gprog').style.width=pct+'%';
+}
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+function cellAt(x,y){
+  const el=document.elementFromPoint(x,y);
+  if(el&&el.classList.contains('cell'))return{r:+el.dataset.r,c:+el.dataset.c};
+  return null;
+}
+
+function selCells(sr,sc,er,ec){
+  const dr=er-sr,dc=ec-sc;
+  if(!dr&&!dc)return[{r:sr,c:sc}];
+  const ar=Math.abs(dr),ac=Math.abs(dc);
+  let nr,nc;
+  const rat=ar>0?ac/ar:Infinity;
+  if(rat>1.8){nr=0;nc=Math.sign(dc)}
+  else if(rat<.55){nr=Math.sign(dr);nc=0}
+  else{nr=Math.sign(dr);nc=Math.sign(dc)}
+  const len=nr===0?ac:nc===0?ar:Math.max(ar,ac);
+  const cells=[];
+  for(let i=0;i<=len;i++){
+    const r=sr+nr*i,c=sc+nc*i;
+    if(r>=0&&r<GS&&c>=0&&c<GS)cells.push({r,c});
+  }
+  return cells;
+}
+
+function hilite(cells){
+  for(let r=0;r<GS;r++)for(let c=0;c<GS;c++){const e=G.cells[r]?.[c];if(e)e.classList.remove('sel')}
+  cells.forEach(({r,c})=>{if(G.cells[r]?.[c])G.cells[r][c].classList.add('sel')})
+}
+
+function clearSel(){
+  G.sel.cells.forEach(({r,c})=>{if(G.cells[r]?.[c])G.cells[r][c].classList.remove('sel')});
+  G.sel={on:false,sr:-1,sc:-1,cells:[]};
+}
+
+function checkSel(){
+  const cells=G.sel.cells;if(cells.length<2)return;
+  const word=cells.map(({r,c})=>G.grid[r][c]).join('');
+  const wordR=word.split('').reverse().join('');
+  for(let i=0;i<G.words.length;i++){
+    const wd=G.words[i];if(wd.found)continue;
+    if(word===wd.w||wordR===wd.w){
+      const wp=wd.pos.map(p=>p.r+','+p.c).sort().join('|');
+      const sp=cells.map(c=>c.r+','+c.c).sort().join('|');
+      if(wp===sp){
+        if(wd.isCh&&!wd.unlocked){openModal(i);clearSel();return}
+        foundWord(i);clearSel();return;
+      }
+    }
+  }
+  cells.forEach(({r,c})=>{
+    const e=G.cells[r]?.[c];
+    if(e){e.style.animation='none';e.offsetHeight;e.style.animation='shake .3s ease'}
+  });
+  setTimeout(clearSel,310);
+}
+
+function foundWord(i){
+  const wd=G.words[i];wd.found=true;
+  const cc=COLORS[wd.ci];
+  wd.pos.forEach(({r,c})=>{if(G.cells[r]?.[c])G.cells[r][c].className=`cell ${cc}`});
+  updChip(i);updProgress();
+  const lp=wd.pos[wd.pos.length-1];
+  const ce=G.cells[lp.r]?.[lp.c];
+  if(ce){const rect=ce.getBoundingClientRect();sparks(rect.left+rect.width/2,rect.top+rect.height/2)}
+  const s=lSt();s.wf++;sSt(s);
+  if(Math.random()<.75)showMsg();
+  if(G.words.every(w=>w.found))setTimeout(completeGame,650);
+}
+
+/* ============================================================
+   TOUCH / MOUSE EVENTS
+   ============================================================ */
+function attachEvents(){
+  const gw=document.querySelector('.grid-wrap');
+
+  gw.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    const t=e.touches[0];const cell=cellAt(t.clientX,t.clientY);
+    if(!cell)return;
+    G.sel={on:true,sr:cell.r,sc:cell.c,cells:[{r:cell.r,c:cell.c}]};
+    hilite(G.sel.cells);
+    touchSpark(t.clientX,t.clientY);
+  },{passive:false});
+
+  gw.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    if(!G.sel.on)return;
+    const t=e.touches[0];const cell=cellAt(t.clientX,t.clientY);
+    if(!cell)return;
+    G.sel.cells=selCells(G.sel.sr,G.sel.sc,cell.r,cell.c);
+    hilite(G.sel.cells);
+  },{passive:false});
+
+  gw.addEventListener('touchend',e=>{
+    e.preventDefault();
+    if(G.sel.on)checkSel();
+  },{passive:false});
+
+  let md=false;
+  gw.addEventListener('mousedown',e=>{
+    const cell=cellAt(e.clientX,e.clientY);if(!cell)return;
+    md=true;G.sel={on:true,sr:cell.r,sc:cell.c,cells:[{r:cell.r,c:cell.c}]};
+    hilite(G.sel.cells);
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!md||!G.sel.on)return;
+    const cell=cellAt(e.clientX,e.clientY);if(!cell)return;
+    G.sel.cells=selCells(G.sel.sr,G.sel.sc,cell.r,cell.c);
+    hilite(G.sel.cells);
+  });
+  document.addEventListener('mouseup',()=>{if(md&&G.sel.on)checkSel();md=false});
+}
+
+/* ============================================================
+   CHALLENGE MODAL
+   ============================================================ */
+let curCh=-1;
+
+function openModal(i){
+  const wd=G.words[i];if(!wd.chd)return;
+  curCh=i;
+  const ch=wd.chd;
+  document.getElementById('chq').textContent=ch.q;
+  document.getElementById('chhint').textContent='¿Cuál es la respuesta?';
+  document.getElementById('chhint').style.color='var(--tx-l)';
+  const op=document.getElementById('chopts');op.innerHTML='';
+  ch.opts.forEach((o,idx)=>{
+    const b=document.createElement('button');
+    b.className='ch-opt';b.textContent=o;
+    b.addEventListener('click',()=>{
+      const allb=op.querySelectorAll('.ch-opt');
+      allb.forEach(x=>x.style.pointerEvents='none');
+      const ok=idx===ch.ans;
+      b.classList.add(ok?'ok':'no');
+      if(!ok)allb[ch.ans].classList.add('ok');
+      if(ok){
+        document.getElementById('chhint').textContent='¡Correcto, preciosa! 🌟 Ahora encuéntrala en el tablero.';
+        document.getElementById('chhint').style.color='var(--tf-d)';
+        setTimeout(()=>{
+          closeModal();
+          G.words[curCh]=G.words[curCh]||{};G.words[i].unlocked=true;
+          updChip(i);
+          toast('¡Palabra desbloqueada! ✨','🔓');
+          setTimeout(showMsg,500);
+        },1400);
+      } else {
+        document.getElementById('chhint').textContent='¡Casi! Observa la respuesta correcta e inténtalo de nuevo.';
+        document.getElementById('chhint').style.color='var(--tc)';
+        setTimeout(()=>{
+          allb.forEach(x=>{x.classList.remove('ok','no');x.style.pointerEvents=''});
+          document.getElementById('chhint').textContent='Inténtalo de nuevo 💪';
+          document.getElementById('chhint').style.color='var(--tx-l)';
+        },1900);
+      }
+    });
+    op.appendChild(b);
+  });
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(){document.getElementById('modal').classList.remove('open');curCh=-1}
+function modalClickOutside(e){if(e.target.id==='modal')closeModal()}
+
+/* ============================================================
+   ROMANTIC MESSAGES
+   ============================================================ */
+function showMsg(){
+  if(!msgQueue.length){msgQueue=[...MSGS].sort(()=>Math.random()-.5);msgIdx=0}
+  const m=msgQueue[msgIdx%msgQueue.length];msgIdx++;
+  toast(m.tx,m.em);
+}
+
+function toast(tx,em){
+  const w=document.getElementById('toast-wrap');
+  const d=document.createElement('div');
+  d.className='toast';
+  d.innerHTML=`<div class="t-em">${em}</div><div class="t-tx">${tx}</div>`;
+  w.appendChild(d);
+  setTimeout(()=>d.remove(),3300);
+}
+
+/* ============================================================
+   EFFECTS
+   ============================================================ */
+const SC=['#5DC4A8','#E8A070','#D4AF6A','#C897A0','#F4D882'];
+
+function sparks(x,y,n=14){
+  const l=document.getElementById('sparks');
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');d.className='sp';
+    const a=(i/n)*Math.PI*2+Math.random()*.6;
+    const dist=22+Math.random()*36;
+    Object.assign(d.style,{
+      left:x+'px',top:y+'px',
+      background:SC[i%SC.length],
+      '--tx':Math.cos(a)*dist+'px',
+      '--ty':Math.sin(a)*dist+'px',
+      width:(4+Math.random()*7)+'px',
+      height:(4+Math.random()*7)+'px',
+    });
+    l.appendChild(d);setTimeout(()=>d.remove(),750);
+  }
+}
+
+function touchSpark(x,y){
+  const l=document.getElementById('sparks');
+  const d=document.createElement('div');d.className='tsp';
+  Object.assign(d.style,{left:(x-7)+'px',top:(y-7)+'px',width:'14px',height:'14px'});
+  l.appendChild(d);setTimeout(()=>d.remove(),480);
+}
+
+function celebrate(){
+  const cols=['#5DC4A8','#E8A070','#D4AF6A','#C897A0','#F4D882','#A8D5C5','#EDD89A'];
+  const l=document.getElementById('sparks');
+  for(let i=0;i<70;i++){
+    const d=document.createElement('div');d.className='confp';
+    const sz=5+Math.random()*10;
+    Object.assign(d.style,{
+      width:sz+'px',height:sz+'px',
+      left:Math.random()*100+'vw',top:0,
+      background:cols[Math.floor(Math.random()*cols.length)],
+      borderRadius:Math.random()>.5?'50%':'3px',
+      '--d':(1.5+Math.random()*2.2)+'s',
+      '--dl':(Math.random()*.9)+'s',
+    });
+    l.appendChild(d);setTimeout(()=>d.remove(),3700);
+  }
+}
+
+function ambientSparks(){
+  setInterval(()=>{
+    if(!document.getElementById('sw').classList.contains('active'))return;
+    const d=document.createElement('div');d.className='amb';
+    Object.assign(d.style,{
+      left:Math.random()*100+'%',
+      top:(30+Math.random()*50)+'%',
+      '--d':(2.5+Math.random()*3)+'s',
+      animationDelay:Math.random()+'s',
+    });
+    document.getElementById('sparks').appendChild(d);
+    setTimeout(()=>d.remove(),5500);
+  },350);
+}
+
+/* ============================================================
+   COMPLETION
+   ============================================================ */
+function completeGame(){
+  stopTim();
+  const t=G.tim.val;
+  const s=lSt();
+  s.gc++;s.gp=Math.max(s.gp,s.gc);
+  let rec=false;
+  if(s.bt===null||t<s.bt){s.bt=t;rec=true}
+  s.csk=(s.csk||0)+1;s.sk=Math.max(s.sk,s.csk);
+  sSt(s);
+
+  document.getElementById('ctime').textContent=ft(t);
+  document.getElementById('cbest').textContent=ft(s.bt);
+  document.getElementById('cgames').textContent=s.gc;
+  document.getElementById('cwords').textContent=s.wf;
+
+  if(rec){
+    document.getElementById('recbadge').style.display='inline-block';
+    document.getElementById('cicon').textContent='🏆';
+    document.getElementById('csub').textContent='¡Nuevo récord personal!';
+  } else {
+    document.getElementById('recbadge').style.display='none';
+    document.getElementById('cicon').textContent='✨';
+    document.getElementById('csub').textContent='Partida completada';
+  }
+  document.getElementById('cmsg').textContent=CMSG[Math.floor(Math.random()*CMSG.length)];
+
+  const miles=[1,3,5,10,20];const mi=miles.indexOf(s.gc);
+  if(mi>=0&&mi<LETTERS_UN.length){
+    document.getElementById('lovecard').style.display='block';
+    document.getElementById('lovetx').textContent=LETTERS_UN[mi];
+  } else {
+    document.getElementById('lovecard').style.display='none';
+  }
+
+  celebrate();
+  show('sc');
+  setTimeout(()=>rec?toast('¡Nuevo récord! Eres increíble 🏆','⭐'):toast('¡Lo lograste, Britney! 💚','✨'),900);
+}
+
+/* ============================================================
+   GAME FLOW
+   ============================================================ */
+function initGameRound(){
+  const s=lSt();
+  document.getElementById('gbest').textContent=s.bt?ft(s.bt):'--:--';
+
+  const{gr,words,theme}=buildGame();
+  G.grid=gr;G.words=words;
+  document.getElementById('gtheme').textContent=theme.name;
+
+  renderGrid();renderChips();updProgress();startTim();
+}
+
+function startGame(){
+  const s=lSt();s.gp++;sSt(s);
+  initGameRound();
+  show('sg');
+}
+
+function newGame(){startGame()}
+
+function restartGame(){
+  stopTim();
+  initGameRound();
+}
+
+/* ============================================================
+   WELCOME FLOWERS (SVG)
+   ============================================================ */
+function sunflower(sz){
+  const p=[0,45,90,135,180,225,270,315].map(d=>`<ellipse cx="30" cy="11" rx="4.5" ry="12" fill="#F4C842" transform="rotate(${d},30,30)"/>`).join('');
+  return`<svg width="${sz}" height="${sz}" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">${p}<circle cx="30" cy="30" r="11" fill="#8B5530"/><circle cx="26" cy="27" r="1.8" fill="#6B3510"/><circle cx="34" cy="27" r="1.8" fill="#6B3510"/><circle cx="30" cy="34" r="1.8" fill="#6B3510"/><circle cx="26" cy="33" r="1.5" fill="#6B3510"/><circle cx="34" cy="33" r="1.5" fill="#6B3510"/></svg>`;
+}
+function rose(sz){
+  const w=Math.round(sz*.7);
+  return`<svg width="${w}" height="${sz}" viewBox="0 0 42 70" xmlns="http://www.w3.org/2000/svg"><line x1="21" y1="44" x2="21" y2="68" stroke="#5A8C6A" stroke-width="2.5" stroke-linecap="round"/><path d="M21,58 Q32,50 30,42 Q26,52 21,58" fill="#7AB87A"/><ellipse cx="21" cy="30" rx="13" ry="9" fill="#E8909A" opacity=".85"/><ellipse cx="21" cy="27" rx="9" ry="7" fill="#D4688A"/><ellipse cx="21" cy="25" rx="6" ry="5" fill="#C0507A"/><circle cx="21" cy="23" r="3.5" fill="#A03565"/></svg>`;
+}
+function tulip(sz){
+  const w=Math.round(sz*.65);
+  return`<svg width="${w}" height="${sz}" viewBox="0 0 42 80" xmlns="http://www.w3.org/2000/svg"><line x1="21" y1="55" x2="21" y2="76" stroke="#5A8C6A" stroke-width="2.5" stroke-linecap="round"/><path d="M21,65 Q10,56 14,46 Q18,57 21,65" fill="#7AB87A"/><path d="M13,36 Q10,20 21,18 Q32,20 29,36 Q27,51 21,53 Q15,51 13,36Z" fill="#C4754A"/><path d="M19,36 Q17,22 21,20 Q24,20 22,31 Q21,42 21,53 Q20,42 19,36Z" fill="#E8A070" opacity=".5"/></svg>`;
+}
+
+function initWelcome(){
+  const arr=[sunflower(58),rose(68),tulip(75),rose(58),tulip(62),sunflower(52)];
+  document.getElementById('wf').innerHTML=`<div style="display:flex;gap:10px;align-items:flex-end">${arr.join('')}</div>`;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init(){
+  if(!localStorage.getItem('bst'))sSt({bt:null,gp:0,gc:0,wf:0,sk:0,csk:0});
+  initWelcome();
+  attachEvents();
+  ambientSparks();
+}
+
+init();
+</script>
+</body>
+</html>

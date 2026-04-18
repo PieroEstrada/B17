@@ -1,0 +1,889 @@
+/* ============================================================
+   VARIABLES — colores principales
+   Verde favorito de ella + paleta floral (girasol, clavel, tulipán)
+============================================================ */
+:root {
+    /* Verde favorito de ella */
+    --green:        #4CAF50;
+    --green-dark:   #2E7D32;
+    --green-light:  #E8F5E9;
+    --green-mid:    #A5D6A7;
+
+    /* Girasol */
+    --sun:          #FFD700;
+    --sun-dark:     #E6A817;
+    --sun-light:    #FFF9C4;
+
+    /* Clavel */
+    --carn:         #FF6B8A;
+    --carn-dark:    #C2185B;
+    --carn-light:   #FCE4EC;
+
+    /* Tulipán */
+    --tulip:        #CE93D8;
+    --tulip-dark:   #7B1FA2;
+    --tulip-light:  #F3E5F5;
+
+    /* Neutros */
+    --cream:        #FAFDF6;
+    --warm:         #F1F8E9;
+    --text:         #1B3A1E;
+    --text-mid:     #4A7C59;
+    --text-soft:    #7CB87E;
+    --white:        #FFFFFF;
+
+    /* Sombras y efectos */
+    --shadow:       0 8px 30px rgba(46, 125, 50, 0.12);
+    --shadow-hover: 0 14px 40px rgba(46, 125, 50, 0.22);
+    --radius:       22px;
+    --radius-sm:    13px;
+    --ease:         0.3s ease;
+}
+
+/* ============================================================
+   RESET BASE
+============================================================ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* ============================================================
+   PARTÍCULAS FLOTANTES DE FONDO
+============================================================ */
+#particles-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    animation: floatUp linear infinite;
+    opacity: 0;
+    user-select: none;
+    pointer-events: none;
+}
+
+@keyframes floatUp {
+    0%   { opacity: 0;   transform: translateY(105vh) rotate(0deg) scale(0.8); }
+    8%   { opacity: 0.75; }
+    88%  { opacity: 0.55; }
+    100% { opacity: 0;   transform: translateY(-10vh) rotate(380deg) scale(1.1); }
+}
+
+/* ============================================================
+   BOTÓN MÚSICA
+============================================================ */
+.music-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1000;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    color: #fff;
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(46,125,50,.4);
+    transition: var(--ease);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.music-btn:hover { transform: scale(1.12); box-shadow: 0 7px 22px rgba(46,125,50,.5); }
+.music-btn.paused { background: linear-gradient(135deg,#aaa,#888); }
+
+/* ============================================================
+   BOTONES
+============================================================ */
+.btn-primary {
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    color: #fff;
+    border: none;
+    padding: 14px 38px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--ease);
+    box-shadow: 0 4px 18px rgba(46,125,50,.35);
+    letter-spacing: .4px;
+}
+.btn-primary:hover  { transform: translateY(-3px); box-shadow: 0 9px 26px rgba(46,125,50,.45); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--sun), var(--sun-dark));
+    color: var(--text);
+    border: none;
+    padding: 13px 32px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--ease);
+    box-shadow: 0 4px 14px rgba(230,168,23,.3);
+}
+.btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(230,168,23,.4); }
+
+.btn-outline {
+    background: transparent;
+    color: var(--green-dark);
+    border: 2px solid var(--green);
+    padding: 13px 32px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--ease);
+}
+.btn-outline:hover { background: var(--green-light); transform: translateY(-3px); }
+
+.hidden { display: none !important; }
+
+/* ============================================================
+   SISTEMA DE SECCIONES
+============================================================ */
+.screen {
+    display: none;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+.screen.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.screen.fade-in  { animation: fadeIn  0.75s ease forwards; }
+.screen.fade-out { animation: fadeOut 0.5s ease forwards; }
+
+@keyframes fadeIn  { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeOut { from { opacity:1; transform:translateY(0); }  to { opacity:0; transform:translateY(-16px); } }
+
+
+/* ============================================================
+   SECCIÓN 1 — BIENVENIDA
+============================================================ */
+#welcome-screen {
+    background: linear-gradient(155deg, #F1F8E9 0%, #E8F5E9 35%, #FFF9C4 65%, #F3E5F5 100%);
+    text-align: center;
+    padding: 60px 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Filas decorativas de flores */
+.deco-row {
+    position: absolute;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    padding: 6px 0;
+}
+.deco-top    { top: 10px; }
+.deco-bottom { bottom: 10px; }
+
+.deco-flower { font-size: 1.9rem; animation: sway 3s ease-in-out infinite; }
+.deco-flower.f2 { animation-delay: .35s; }
+.deco-flower.f3 { animation-delay: .7s;  }
+.deco-flower.f4 { animation-delay: 1.05s; }
+.deco-flower.f5 { animation-delay: 1.4s; }
+.deco-flower.f6 { animation-delay: 1.75s; }
+
+@keyframes sway {
+    0%,100% { transform: rotate(-9deg) translateY(0); }
+    50%      { transform: rotate(9deg) translateY(-6px); }
+}
+
+/* Contenido central de bienvenida */
+.welcome-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 13px;
+    max-width: 620px;
+}
+
+.heart-pulse {
+    font-size: 3.2rem;
+    animation: heartbeat 1.6s ease-in-out infinite;
+}
+@keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    20%      { transform: scale(1.25); }
+    40%      { transform: scale(1.05); }
+    60%      { transform: scale(1.15); }
+}
+
+.welcome-title {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    color: var(--green-dark);
+    font-style: italic;
+    text-shadow: 2px 3px 0 var(--green-mid), 0 0 28px rgba(46,125,50,.18);
+    line-height: 1.1;
+}
+
+.title-flowers { font-size: 1.6rem; letter-spacing: 8px; }
+
+.welcome-sub  { font-size: 1.2rem; color: var(--text-mid); font-style: italic; }
+
+.welcome-name {
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+    color: var(--carn-dark);
+    font-style: italic;
+    text-shadow: 2px 2px 0 var(--carn-light), 0 0 24px rgba(194,24,91,.2);
+    animation: nameGlow 3s ease-in-out infinite;
+}
+@keyframes nameGlow {
+    0%,100% { text-shadow: 2px 2px 0 var(--carn-light); }
+    50%      { text-shadow: 2px 2px 0 var(--carn-light), 0 0 22px var(--carn); }
+}
+
+.welcome-from { font-size: 1.1rem; color: var(--text-mid); }
+.welcome-hint { font-size: .95rem; color: var(--text-soft); font-style: italic; }
+
+
+/* ============================================================
+   SECCIÓN 2 — QUIZ
+============================================================ */
+#quiz-section {
+    background: linear-gradient(155deg, #F1F8E9, #FFF9C4 60%, #F3E5F5);
+    padding: 20px;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+.quiz-wrapper {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    min-height: 100vh;
+}
+
+.quiz-header { text-align: center; }
+
+.quiz-logo {
+    font-size: 1.05rem;
+    color: var(--green-dark);
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.progress-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+}
+
+.q-counter {
+    font-size: .92rem;
+    color: var(--text-mid);
+    font-style: italic;
+}
+
+.progress-track {
+    width: 100%;
+    max-width: 420px;
+    height: 9px;
+    background: var(--green-light);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--green-mid);
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--green), var(--green-dark));
+    border-radius: 10px;
+    transition: width .55s ease;
+}
+
+/* Tarjeta de pregunta */
+.question-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid rgba(76,175,80,.15);
+    animation: cardIn .5s ease;
+}
+@keyframes cardIn {
+    from { opacity:0; transform:scale(.95) translateY(12px); }
+    to   { opacity:1; transform:scale(1) translateY(0); }
+}
+
+.q-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--green-light), var(--sun-light), var(--carn-light));
+}
+.q-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .5s ease;
+}
+.q-img-fade {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 70px;
+    background: linear-gradient(transparent, var(--white));
+}
+
+.q-body { padding: 26px; }
+
+.q-text {
+    font-size: 1.18rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 22px;
+    line-height: 1.55;
+}
+
+/* Opciones del quiz */
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 13px;
+    margin-bottom: 22px;
+}
+
+.option-btn {
+    background: var(--cream);
+    border: 2px solid var(--green-mid);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-family: inherit;
+    font-size: .95rem;
+    color: var(--text);
+    cursor: pointer;
+    transition: var(--ease);
+    text-align: left;
+    line-height: 1.45;
+}
+.option-btn:hover:not(:disabled) {
+    border-color: var(--green);
+    background: var(--green-light);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 14px rgba(76,175,80,.2);
+}
+.option-btn.correct {
+    background: linear-gradient(135deg,#E8F5E9,#C8E6C9);
+    border-color: #4CAF50;
+    color: #1B5E20;
+    animation: correctPop .4s ease;
+}
+.option-btn.wrong {
+    background: linear-gradient(135deg,#FFEBEE,#FFCDD2);
+    border-color: #E53935;
+    color: #B71C1C;
+    animation: wrongShake .45s ease;
+}
+.option-btn.show-correct {
+    background: linear-gradient(135deg,#E8F5E9,#C8E6C9);
+    border-color: #4CAF50;
+}
+.option-btn:disabled { cursor: not-allowed; opacity: .85; }
+
+@keyframes correctPop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+@keyframes wrongShake {
+    0%,100% { transform: translateX(0); }
+    25%     { transform: translateX(-7px); }
+    75%     { transform: translateX(7px); }
+}
+
+.q-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.feedback-msg {
+    font-size: 1rem;
+    font-style: italic;
+    min-height: 24px;
+    color: var(--green-dark);
+    flex: 1;
+}
+
+
+/* ============================================================
+   SECCIÓN 3 — QUIZ COMPLETADO
+============================================================ */
+#quiz-complete {
+    background: linear-gradient(155deg, #F1F8E9, #E8F5E9 50%, #FFF9C4);
+    text-align: center;
+    padding: 50px 24px;
+}
+
+.complete-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 520px;
+}
+
+.complete-emoji {
+    font-size: 4.5rem;
+    animation: bounce 1s ease-in-out infinite;
+}
+@keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-16px); }
+}
+
+.complete-title {
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    color: var(--green-dark);
+    font-style: italic;
+}
+
+.complete-sub, .complete-hint { font-size: 1.1rem; color: var(--text-mid); }
+
+.score-display {
+    font-size: 1.2rem;
+    color: var(--green-dark);
+    font-weight: bold;
+    background: var(--green-light);
+    padding: 8px 22px;
+    border-radius: 50px;
+    border: 2px solid var(--green-mid);
+}
+
+.complete-flowers { font-size: 1.9rem; letter-spacing: 10px; }
+
+
+/* ============================================================
+   SECCIÓN 4 — TESTAMENTO CON PINGÜINITO
+============================================================ */
+#testament-section {
+    background: linear-gradient(155deg, #F1F8E9 0%, #E8F5E9 40%, #FFF9C4 70%, #F3E5F5 100%);
+    padding: 50px 20px 80px;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.testament-wrap {
+    width: 100%;
+    max-width: 740px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+}
+
+.testament-title {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    color: var(--green-dark);
+    text-align: center;
+    font-style: italic;
+}
+
+/* ============================================================
+   PISTA DEL PINGÜINITO
+============================================================ */
+.penguin-track {
+    width: 100%;
+    height: 105px;
+    position: relative;
+    background: linear-gradient(to bottom, transparent 0%, rgba(232,245,233,.6) 100%);
+    border-bottom: 2px dashed var(--green-mid);
+    border-radius: 12px;
+    overflow: visible;
+}
+
+/* ============================================================
+   PINGÜINITO (hecho 100% en CSS — no requiere ninguna imagen)
+============================================================ */
+.penguin {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 64px;
+    height: 95px;
+    transition: left .18s linear;
+    filter: drop-shadow(2px 5px 7px rgba(0,0,0,.14));
+}
+
+/* Cuerpo */
+.p-body {
+    width: 54px;
+    height: 74px;
+    background: #1a1a2e;
+    border-radius: 50% 50% 42% 42%;
+    position: relative;
+    margin: 0 auto;
+    animation: waddle .55s ease-in-out infinite alternate;
+}
+@keyframes waddle {
+    0%   { transform: rotate(-4.5deg) translateY(0); }
+    100% { transform: rotate(4.5deg)  translateY(-3px); }
+}
+
+/* Barriga */
+.p-belly {
+    position: absolute;
+    width: 33px;
+    height: 46px;
+    background: #F5F0E8;
+    border-radius: 46% 46% 42% 42%;
+    top: 15px;
+    left: 10px;
+}
+
+/* Ojos */
+.p-eye {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    top: 15px;
+}
+.p-eye-l { left: 9px; }
+.p-eye-r { right: 9px; }
+
+.p-pupil {
+    width: 5px;
+    height: 5px;
+    background: #1a1a2e;
+    border-radius: 50%;
+    position: absolute;
+    top: 2.5px;
+    left: 2.5px;
+}
+
+/* Pico */
+.p-beak {
+    position: absolute;
+    width: 15px;
+    height: 8px;
+    background: #FF8C00;
+    border-radius: 0 0 8px 8px;
+    top: 27px;
+    left: 19px;
+}
+
+/* Alas */
+.p-wing {
+    position: absolute;
+    width: 15px;
+    height: 32px;
+    background: #1a1a2e;
+    border-radius: 50%;
+    top: 22px;
+}
+.p-wing-l {
+    left: -9px;
+    transform-origin: top center;
+    animation: wingL .55s ease-in-out infinite alternate;
+}
+.p-wing-r {
+    right: -9px;
+    transform-origin: top center;
+    animation: wingR .55s ease-in-out infinite alternate;
+}
+@keyframes wingL { 0% { transform:rotate(-18deg); } 100% { transform:rotate(14deg); } }
+@keyframes wingR { 0% { transform:rotate(14deg);  } 100% { transform:rotate(-18deg); } }
+
+/* Pies */
+.p-feet {
+    display: flex;
+    justify-content: center;
+    gap: 9px;
+    margin-top: 3px;
+}
+.p-foot {
+    width: 19px;
+    height: 10px;
+    background: #FF8C00;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+.p-foot-l {
+    transform-origin: right center;
+    animation: footL .55s ease-in-out infinite alternate;
+}
+.p-foot-r {
+    transform-origin: left center;
+    animation: footR .55s ease-in-out infinite alternate;
+}
+@keyframes footL { 0% { transform:rotate(-22deg) translateY(-4px); } 100% { transform:rotate(12deg) translateY(0); } }
+@keyframes footR { 0% { transform:rotate(12deg) translateY(0);   } 100% { transform:rotate(-22deg) translateY(-4px); } }
+
+/* ============================================================
+   TEXTO DEL TESTAMENTO
+============================================================ */
+.testament-text {
+    width: 100%;
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 38px 44px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(76,175,80,.14);
+    min-height: 180px;
+    position: relative;
+    line-height: 1.95;
+}
+
+.testament-text::before {
+    content: '\201C';
+    position: absolute;
+    top: 8px;
+    left: 18px;
+    font-size: 5.5rem;
+    color: var(--green-mid);
+    font-family: Georgia,serif;
+    line-height: 1;
+    opacity: .7;
+}
+
+.testament-para {
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-bottom: 22px;
+    text-indent: 2.2em;
+    line-height: 1.95;
+}
+
+/* ============================================================
+   MENSAJE FINAL ESPECIAL
+============================================================ */
+.final-love-msg {
+    text-align: center;
+    padding: 34px 28px;
+    background: linear-gradient(135deg, var(--green-light), var(--sun-light), var(--carn-light), var(--tulip-light));
+    border-radius: var(--radius);
+    box-shadow: 0 10px 34px rgba(46,125,50,.22);
+    width: 100%;
+    animation: finalPop 1s ease;
+    border: 2px solid var(--green-mid);
+}
+@keyframes finalPop {
+    0%  { opacity:0; transform:scale(.78); }
+    65% { transform:scale(1.04); }
+    100%{ opacity:1; transform:scale(1); }
+}
+
+.final-heart {
+    font-size: 3.2rem;
+    animation: heartbeat 1.6s ease-in-out infinite;
+    margin-bottom: 12px;
+}
+
+.final-text {
+    font-size: clamp(1.25rem, 3.2vw, 1.9rem);
+    color: var(--green-dark);
+    font-style: italic;
+    font-weight: bold;
+    line-height: 1.6;
+}
+
+/* Resaltado para #17 y #ParaSiempre */
+.hl {
+    color: var(--carn-dark);
+    font-size: 1.15em;
+    text-shadow: 1px 1px 0 var(--carn-light);
+    animation: nameGlow 2.5s ease-in-out infinite;
+}
+
+/* Botones finales */
+.end-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 6px;
+}
+
+/* Botón "Leer completo" — sutil, aparece durante el typing */
+.btn-skip-typing {
+    background: transparent;
+    color: var(--text-soft);
+    border: 1.5px dashed var(--green-mid);
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    font-style: italic;
+    cursor: pointer;
+    transition: var(--ease);
+    letter-spacing: 0.3px;
+    align-self: center;
+}
+.btn-skip-typing:hover {
+    background: var(--green-light);
+    color: var(--green-dark);
+    border-color: var(--green);
+    transform: translateY(-2px);
+}
+
+/* Estado de carga de imagen — fade suave */
+.q-img { transition: opacity 0.18s ease; }
+
+
+/* ============================================================
+   PLACEHOLDER DE SUBIDA DE IMAGEN (nuevo)
+   Aparece dentro de .q-img-wrap cuando la imagen no existe.
+   Clic en él abre el selector de archivos del sistema.
+============================================================ */
+.q-img-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--green-light), var(--sun-light));
+    border: 3px dashed var(--green-mid);
+    border-radius: var(--radius) var(--radius) 0 0;
+    cursor: pointer;
+    transition: background var(--ease), border-color var(--ease), transform .2s ease;
+    user-select: none;
+    z-index: 2;
+}
+
+.q-img-placeholder:hover:not(.uploading) {
+    background: linear-gradient(135deg, #d0edda, #fff9b0);
+    border-color: var(--green);
+    transform: scale(1.012);
+}
+
+.q-img-ph-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    text-align: center;
+    padding: 18px;
+}
+
+.q-img-ph-icon {
+    font-size: 2.6rem;
+    line-height: 1;
+    display: block;
+    transition: transform .3s ease;
+}
+.q-img-placeholder:hover:not(.uploading) .q-img-ph-icon {
+    transform: scale(1.18) translateY(-4px);
+}
+
+.q-img-ph-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--green-dark);
+    font-family: Georgia, serif;
+    font-style: italic;
+}
+
+.q-img-ph-sub {
+    font-size: .82rem;
+    color: var(--text-soft);
+    font-style: italic;
+}
+
+/* Estado: archivo subiendo */
+.q-img-placeholder.uploading {
+    cursor: wait;
+    border-color: var(--sun-dark);
+    background: linear-gradient(135deg, var(--sun-light), #fff9e6);
+    animation: phPulse 1s ease-in-out infinite;
+}
+@keyframes phPulse {
+    0%,100% { opacity: 1;   }
+    50%      { opacity: .72; }
+}
+
+/* Estado: subida exitosa */
+.q-img-placeholder.success {
+    border-color: var(--green);
+    background: linear-gradient(135deg, #d0edda, #b8e0be);
+    cursor: default;
+}
+
+/* Estado: error en la subida */
+.q-img-placeholder.error {
+    border-color: var(--carn-dark);
+    background: linear-gradient(135deg, #fce4ec, #ffd6e0);
+    animation: none;
+}
+.q-img-placeholder.error .q-img-ph-text {
+    color: var(--carn-dark);
+}
+
+
+/* ============================================================
+   RESPONSIVE — MÓVILES
+============================================================ */
+@media (max-width: 620px) {
+    .options-grid { grid-template-columns: 1fr; }
+
+    .q-img-wrap { height: 280px; }
+
+    .testament-text {
+        padding: 30px 22px;
+    }
+    .testament-text::before { font-size: 3.8rem; }
+
+    .deco-flower { font-size: 1.4rem; }
+    .deco-row    { gap: 9px; }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-outline {
+        width: 100%;
+        text-align: center;
+    }
+
+    .end-actions { flex-direction: column; align-items: center; }
+
+    .penguin-track { height: 88px; }
+    .penguin       { width: 52px; height: 78px; }
+    .p-body        { width: 44px; height: 60px; }
+    .p-belly       { width: 26px; height: 36px; top: 12px; left: 9px; }
+}
+
+@media (max-width: 400px) {
+    .welcome-title { font-size: 2rem; }
+    .welcome-name  { font-size: 2.4rem; }
+    .quiz-wrapper  { padding: 14px 0; }
+}
